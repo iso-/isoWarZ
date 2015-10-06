@@ -13,6 +13,7 @@ struct feature
     int j;
     int h;
     int w;
+    int res;
 };
 
 typedef struct element element;

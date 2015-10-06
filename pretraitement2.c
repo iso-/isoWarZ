@@ -143,7 +143,7 @@ size*=1.25;
 }
 SDL_SaveBMP (fenetre,"tata.bmp");
 }
-void Integral(SDL_Surface *image)
+SDL_Surface* Integral(SDL_Surface *image)
 {
 int x,y;
 SDL_Surface *fenetre=NULL;
@@ -164,6 +164,5 @@ defPixel(fenetre,x,y,getpixel(fenetre,x,y-1)+line);
 }
 
 }
-SDL_SaveBMP(fenetre,"titi.bmp");
-
+return fenetre;
 }

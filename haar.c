@@ -2,7 +2,7 @@
 # include <stdlib.h>
 # include <SDL/SDL.h>
 # include <SDL/SDL_image.h>
-#include "haar.h"
+# include "haar.h"
 
 list haar1(SDL_Surface *image);
 list haar2(SDL_Surface *image);
@@ -37,6 +37,8 @@ int main()
 list haar1(SDL_Surface *image)
 {
     list list1 = NULL;
+    image = Integral(image);
+    Uint32 a,b,c,d,e,f;
     for(int i=0; i<image->w; i++)
     {
 	for(int j=0; j<image->h; j++)
@@ -51,6 +53,13 @@ list haar1(SDL_Surface *image)
 				f.j=j;
 				f.w=w;
 				f.h=h;
+				a = getpixel(image,i,j);
+				b = getpixel(image,i,j+h);
+				c = getpixel(image,i+(w/2),j);
+				d = getpixel(image,i+(w/2),j+h);
+				e = getpixel(image,i+w,j);
+				f = getpixel(image,i+w,j+h);
+				f.res = (c+f-d-e)-(a+d-b-c);
 				list1 = add_list(list1, f);
 			}
 		}
