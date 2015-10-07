@@ -24,7 +24,7 @@ int main()
     SDL_Surface *surface = NULL;
     surface = IMG_Load("image.png");	
     
-    int *array = malloc(
+    //int **arr = Integral(surface);
     //Uint32 a = getpixel(surface,0,0);
     //Uint32 b = getpixel(surface,0,1);
     //printf("%d\n",a);
@@ -35,19 +35,20 @@ int main()
     t = t + nb_elements(haar3(surface));
     t = t + nb_elements(haar4(surface));
     t = t + nb_elements(haar5(surface));*/
-    printf("%d\n", arr[0,0]);
-    //printf("%d\n", (value(element_i(haar1(surface),0))).res);
+    //printf("%d\n%d\n%d\n", getpixel(surface,0,2), getpixel(surface,1,1), getpixel(surface,1,2));
+    //printf("%d\n", arr[1][2]);
+    printf("%d\n", (value(element_i(haar1(surface),0))).res);
     //browse(surface,24);
 }
 
 list haar1(SDL_Surface *image)
 { 
     list list1 = NULL;
-    //image = Integral(image);
+    int **arr = Integral(image);
     Uint32 a,b,c,d,e,f;
-    for(int i=0; i<image->w; i++)
+    for(int i=0; i<image->h; i++)
     {
-	for(int j=0; j<image->h; j++)
+	for(int j=0; j<image->w; j++)
 	{
 		for(int h=1; i+h-1<=24; h++)
 		{
@@ -59,12 +60,12 @@ list haar1(SDL_Surface *image)
 				feat.j=j;
 				feat.w=w;
 				feat.h=h;
-				a = getpixel(image,i,j);
-				b = getpixel(image,i,j+h);
-				c = getpixel(image,i+(w/2),j);
-				d = getpixel(image,i+(w/2),j+h);
-				e = getpixel(image,i+w,j);
-				f = getpixel(image,i+w,j+h);
+				a = arr[j][i];
+				b = arr[j+h][i];//arret inversion + initialisation de h et w
+				c = arr[i+(w/2)][j];
+				d = arr[i+(w/2)][j+h];
+				e = arr[i+w][j];
+				f = arr[i+w][j+h];
 				feat.res = (c+f-d-e)-(a+d-b-c);
 				list1 = add_list(list1, feat);
 			}

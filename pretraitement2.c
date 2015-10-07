@@ -146,16 +146,51 @@ size*=1.25;
 SDL_SaveBMP (fenetre,"tata.bmp");
 }
 
-void Integral(SDL_Surface *image, int arr[][])
+int **createArray(int nbl, int nbcol)
 {
-    arr[0,0] = getpixel(image,0,0);
-    for(int k=0; k<image->w; k++)
+    int **array = (int **)malloc(sizeof(int*)*nbl);
+    int *array2 = (int *)malloc(sizeof(int)*nbcol*nbl);
+    for(int i=0; i<nbl; i++)
     {
-	for(int l=0; l<image->h; l++)
+	array[i] = &array2[i*nbcol];
+    }
+    return array;
+}
+void freeArray(int **tab)
+{
+    free(tab[0]);
+    free(tab);
+}
+static void fill_array(int **arr, int l, int c)
+{
+    for(int i =0; i<l; i++)
+    {
+	for(int j=0; j<c; j++)
 	{
-		arr[k,l] = getpixel(image,k,l) + arr[k,l-1] + arr[k-1,l] - arr[k-1,l-1];
+	    arr[i][j] = 0;
 	}
     }
-    
+}
+
+int **Integral(SDL_Surface *image)
+{
+    int x,y;
+    int **arr = createArray(image->h, image->w);
+    fill_array(arr, image->h, image->w);
+    arr[0][0] = getpixel(image,0,0);
+    for(x=1; x<image->w; x++)
+    {
+	arr[0][x] = getpixel(image,0,x) + arr[0][x-1];
+    }
+    for(y=1; y<image->h; y++)
+    {
+	double line = getpixel(image,y,0);
+	arr[y][0] = arr[y-1][0] + line;
+	for(x=0; x<image->w; x++)
+	{
+	    arr[y][x] = arr[y-1][x] + line;
+	    line += getpixel(image,y,0);
+	} 
+    }
     return arr;
 }

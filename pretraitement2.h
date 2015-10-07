@@ -5,7 +5,7 @@ Uint32 getpixel(SDL_Surface *surface,unsigned x,unsigned y);
 void defPixel(SDL_Surface *surface,int x,int y,Uint32 color);
 void goToGrey(SDL_Surface *surface);
 void browse(SDL_Surface *image, int size);
-SDL_Surface* Integral(SDL_Surface *image);
+int **Integral(SDL_Surface *image);
 
 /*typedef struct array array;
 struct array
