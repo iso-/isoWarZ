@@ -13,31 +13,37 @@ list haar5(SDL_Surface *image);
 int main()
 {
     /*list list1 = NULL;
-    feature f;
-    f.t=1;
-    f.i=2;
-    f.j=3;
-    f.w=4;
-    f.h=5;
-    list1 = add_list(list1, f);*/
+    feature feat;
+    feat.t=1;
+    feat.i=2;
+    feat.j=3;
+    feat.w=4;
+    feat.h=5;
+    list1 = add_list(list1, feat);*/
     
     SDL_Surface *surface = NULL;
     surface = IMG_Load("image.png");	
+    
+    int *array = malloc(
+    //Uint32 a = getpixel(surface,0,0);
+    //Uint32 b = getpixel(surface,0,1);
+    //printf("%d\n",a);
     //Integral(surface);
-    int t=0;
+    /*int t=0;
     t = t + nb_elements(haar1(surface));
     t = t + nb_elements(haar2(surface));
     t = t + nb_elements(haar3(surface));
     t = t + nb_elements(haar4(surface));
-    t = t + nb_elements(haar5(surface));
-    printf("%d\n", t);
+    t = t + nb_elements(haar5(surface));*/
+    printf("%d\n", arr[0,0]);
+    //printf("%d\n", (value(element_i(haar1(surface),0))).res);
     //browse(surface,24);
 }
 
 list haar1(SDL_Surface *image)
-{
+{ 
     list list1 = NULL;
-    image = Integral(image);
+    //image = Integral(image);
     Uint32 a,b,c,d,e,f;
     for(int i=0; i<image->w; i++)
     {
@@ -47,20 +53,20 @@ list haar1(SDL_Surface *image)
 		{
 			for(int w=1; j+2*w-1<=24; w++)
 			{	
-				feature f;
-				f.t=1;
-				f.i=i;
-				f.j=j;
-				f.w=w;
-				f.h=h;
+				feature feat;
+				feat.t=1;
+				feat.i=i;
+				feat.j=j;
+				feat.w=w;
+				feat.h=h;
 				a = getpixel(image,i,j);
 				b = getpixel(image,i,j+h);
 				c = getpixel(image,i+(w/2),j);
 				d = getpixel(image,i+(w/2),j+h);
 				e = getpixel(image,i+w,j);
 				f = getpixel(image,i+w,j+h);
-				f.res = (c+f-d-e)-(a+d-b-c);
-				list1 = add_list(list1, f);
+				feat.res = (c+f-d-e)-(a+d-b-c);
+				list1 = add_list(list1, feat);
 			}
 		}
 	}
@@ -79,13 +85,13 @@ list haar2(SDL_Surface *image)
 		{
 			for(int w=1; j+3*w-1<=24; w++)
 			{	
-				feature f;
-				f.t=2;
-				f.i=i;
-				f.j=j;
-				f.w=w;
-				f.h=h;
-				list1 = add_list(list1, f);
+				feature feat2;
+				feat2.t=2;
+				feat2.i=i;
+				feat2.j=j;
+				feat2.w=w;
+				feat2.h=h;
+				list1 = add_list(list1, feat2);
 			}
 		}
 	}
@@ -104,13 +110,13 @@ list haar3(SDL_Surface *image)
 		{
 			for(int w=1; j+w-1<=24; w++)
 			{	
-				feature f;
-				f.t=3;
-				f.i=i;
-				f.j=j;
-				f.w=w;
-				f.h=h;
-				list1 = add_list(list1, f);
+				feature feat;
+				feat.t=3;
+				feat.i=i;
+				feat.j=j;
+				feat.w=w;
+				feat.h=h;
+				list1 = add_list(list1, feat);
 			}
 		}
 	}
@@ -129,13 +135,13 @@ list haar4(SDL_Surface *image)
 		{
 			for(int w=1; j+w-1<=24; w++)
 			{	
-				feature f;
-				f.t=4;
-				f.i=i;
-				f.j=j;
-				f.w=w;
-				f.h=h;
-				list1 = add_list(list1, f);
+				feature feat;
+				feat.t=4;
+				feat.i=i;
+				feat.j=j;
+				feat.w=w;
+				feat.h=h;
+				list1 = add_list(list1, feat);
 			}
 		}
 	}
@@ -154,13 +160,13 @@ list haar5(SDL_Surface *image)
 		{
 			for(int w=1; j+2*w-1<=24; w++)
 			{	
-				feature f;
-				f.t=5;
-				f.i=i;
-				f.j=j;
-				f.w=w;
-				f.h=h;
-				list1 = add_list(list1, f);
+				feature feat;
+				feat.t=5;
+				feat.i=i;
+				feat.j=j;
+				feat.w=w;
+				feat.h=h;
+				list1 = add_list(list1, feat);
 			}
 		}
 	}

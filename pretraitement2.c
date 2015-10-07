@@ -39,6 +39,8 @@
 
 
 }*/
+
+
 Uint32 getpixel(SDL_Surface *surface,unsigned x, unsigned y)
 {
 Uint8 *p=(Uint8 *)surface->pixels+y*surface->pitch+x*(surface->format->BytesPerPixel);
@@ -143,26 +145,17 @@ size*=1.25;
 }
 SDL_SaveBMP (fenetre,"tata.bmp");
 }
-SDL_Surface* Integral(SDL_Surface *image)
-{
-int x,y;
-SDL_Surface *fenetre=NULL;
-fenetre=SDL_CreateRGBSurface(SDL_HWSURFACE,image->w,image->h,32,0,0,0,0);
-defPixel(fenetre,0,0,getpixel(image,0,0));
-for(x=1;x<image->w;x++)
-{
-defPixel(fenetre,x,0,getpixel(image,x,0)+getpixel(fenetre,x-1,0));
-}
-for(y=1;y<image->h;y++)
-{
-double line=getpixel(image,0,y);
-defPixel(fenetre,0,y,getpixel(fenetre,0,y-1)+line);
-for(x=0;x<image->w;x++)
-{
-line+=getpixel(image,0,y);
-defPixel(fenetre,x,y,getpixel(fenetre,x,y-1)+line);
-}
 
-}
-return fenetre;
+void Integral(SDL_Surface *image, int arr[][])
+{
+    arr[0,0] = getpixel(image,0,0);
+    for(int k=0; k<image->w; k++)
+    {
+	for(int l=0; l<image->h; l++)
+	{
+		arr[k,l] = getpixel(image,k,l) + arr[k,l-1] + arr[k-1,l] - arr[k-1,l-1];
+	}
+    }
+    
+    return arr;
 }

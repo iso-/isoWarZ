@@ -7,11 +7,11 @@ void goToGrey(SDL_Surface *surface);
 void browse(SDL_Surface *image, int size);
 SDL_Surface* Integral(SDL_Surface *image);
 
-/*typedef struct array array;
+typedef struct array array;
 struct array
 {
     int i;
     int j;
     int tab[i][j];
-};*/
+};
 #endif
