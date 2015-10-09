@@ -35,9 +35,10 @@ int main()
     t = t + nb_elements(haar3(surface));
     t = t + nb_elements(haar4(surface));
     t = t + nb_elements(haar5(surface));*/
-    //printf("%d\n%d\n%d\n", getpixel(surface,0,2), getpixel(surface,1,1), getpixel(surface,1,2));
+    printf("%d\n%d\n%d\n%d\n%d\n%d\n%d\n%d\n", getpixel(surface,0,0), getpixel(surface,0,1), getpixel(surface,0,2),getpixel(surface,0,3),getpixel(surface,0,4),getpixel(surface,0,5),getpixel(surface,0,6),getpixel(surface,0,7));
     //printf("%d\n", arr[1][2]);
-    printf("%d\n", (value(element_i(haar1(surface),0))).res);
+	//printf("%d",nb_elements(haar3(surface)));
+    printf("%d\n",(value(element_i(haar1(surface),3))).res);
     //browse(surface,24);
 }
 
@@ -45,14 +46,14 @@ list haar1(SDL_Surface *image)
 { 
     list list1 = NULL;
     int **arr = Integral(image);
-    Uint32 a,b,c,d,e,f;
+    
     for(int i=0; i<image->h; i++)
     {
 	for(int j=0; j<image->w; j++)
 	{
-		for(int h=1; i+h-1<=24; h++)
+		for(int h=1; i+h-1<24; h++)
 		{
-			for(int w=1; j+2*w-1<=24; w++)
+			for(int w=1; j+2*w-1<24; w++)
 			{	
 				feature feat;
 				feat.t=1;
@@ -60,13 +61,10 @@ list haar1(SDL_Surface *image)
 				feat.j=j;
 				feat.w=w;
 				feat.h=h;
-				a = arr[j][i];
-				b = arr[j+h][i];//arret inversion + initialisation de h et w
-				c = arr[i+(w/2)][j];
-				d = arr[i+(w/2)][j+h];
-				e = arr[i+w][j];
-				f = arr[i+w][j+h];
-				feat.res = (c+f-d-e)-(a+d-b-c);
+				int S1,S2;
+				S1=(((i+h-1<0)|(j+w-1<0))?0:arr[i+h-1][j+w-1])-(((i+h-1<0)|(j-1<0))?0:arr[i+h-1][j-1])-(((i-1<0)|(j+w-1<0))?0:arr[i-1][j+w-1])+(((i-1<0)|(j-1<0))?0:arr[i-1][j-1]);
+				S2=(((i+h-1<0)|(j+2*w-1<0))?0:arr[i+h-1][j+2*w-1])-(((i+h-1<0)|(j-1+w<0))?0:arr[i+h-1][j-1+w])-(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1])+(((i-1<0)|(j-1+w<0))?0:arr[i-1][-1+w]);
+				feat.res=S1-S2;
 				list1 = add_list(list1, feat);
 			}
 		}
@@ -82,9 +80,9 @@ list haar2(SDL_Surface *image)
     {
 	for(int j=0; j<image->h; j++)
 	{
-		for(int h=1; i+h-1<=24; h++)
+		for(int h=1; i+h-1<24; h++)
 		{
-			for(int w=1; j+3*w-1<=24; w++)
+			for(int w=1; j+3*w-1<24; w++)
 			{	
 				feature feat2;
 				feat2.t=2;
@@ -107,9 +105,9 @@ list haar3(SDL_Surface *image)
     {
 	for(int j=0; j<image->h; j++)
 	{
-		for(int h=1; i+2*h-1<=24; h++)
+		for(int h=1; i+2*h-1<24; h++)
 		{
-			for(int w=1; j+w-1<=24; w++)
+			for(int w=1; j+w-1<24; w++)
 			{	
 				feature feat;
 				feat.t=3;
@@ -132,9 +130,9 @@ list haar4(SDL_Surface *image)
     {
 	for(int j=0; j<image->h; j++)
 	{
-		for(int h=1; i+3*h-1<=24; h++)
+		for(int h=0; i+3*h-1<24; h++)
 		{
-			for(int w=1; j+w-1<=24; w++)
+			for(int w=0; j+w-1<24; w++)
 			{	
 				feature feat;
 				feat.t=4;
@@ -157,9 +155,9 @@ list haar5(SDL_Surface *image)
     {
 	for(int j=0; j<image->h; j++)
 	{
-		for(int h=1; i+2*h-1<=24; h++)
+		for(int h=0; i+2*h-1<24; h++)
 		{
-			for(int w=1; j+2*w-1<=24; w++)
+			for(int w=0; j+2*w-1<24; w++)
 			{	
 				feature feat;
 				feat.t=5;
