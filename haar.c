@@ -21,7 +21,8 @@ int main()
     printf("%d\n%d\n%d\n%d\n%d\n%d\n%d\n", getpixel(surface,0,0), getpixel(surface,0,1), getpixel(surface,1,0),getpixel(surface,1,0),getpixel(surface,4,0),getpixel(surface,5,0),getpixel(surface,0,7));
     //printf("%d\n", arr[1][2]);
 	//printf("%d",nb_elements(haar3(surface)));
-    printf("%d\n",scaling(surface,(value(element_i(haar1(surface),0)))));
+    printf("%d\n",scaling(surface,(value(element_i(haar1(surface),2)))));
+   // printf("%d\n",(value(element_i(haar1(surface),0))).res);
     //browse(surface,24);
 }
 
@@ -196,31 +197,36 @@ int max(int a, int b)
 int scaling(SDL_Surface *image, feature feat)
 { 
     int a,b,c;
-    int x = 0;
-    int y = 0;
+    int x = 1;
+    int y = 1;
+    int w,i,j,h;
     int **arr = Integral(image);
     if(feat.t == 1)
     {
 	c = 2*feat.w*feat.h;
-	feat.i = (int)(round((feat.i*image->h)/24));
-	feat.j = (int)(round((feat.j*image->h)/24));
-	feat.h = (int)(round((feat.h*image->h)/24));
-	while(x <= ((int)(round(1+(2*feat.w*image->h)/24)))/2)
+	i = (int)(round((feat.i*image->h)/24));
+	j = (int)(round((feat.j*image->h)/24));
+	h = (int)(round((feat.h*image->h)/24));
+	while(x < (((int)(round(1+(2*feat.w*image->h)/24)))/2)&& 2*x<((image->h-j+1)))
 	{
 	    x++;
 	}
-	while(y <= (image->h-feat.j+1)/2)
-	{
-	    y++;
-	}
+	
+	//y=(((int)(round(1+(2*feat.w*image->h)/24)))/2);
 	int S1,S2;
-	feat.w = max(x,y);
-	a = feat.i+feat.h-1;
-	b = feat.j+feat.w-1;
-	S1=(((a<0)|(b<0))?0:arr[a][b])-(((a<0)|(feat.j-1<0))?0:arr[a][feat.j-1])-(((feat.i-1<0)|(b<0))?0:arr[feat.i-1][b])+(((feat.i-1<0)|(feat.j-1<0))?0:arr[feat.i-1][feat.j-1]);
-	S2=(((a<0)|(feat.j+2*feat.w-1<0))?0:arr[a][feat.j+2*feat.w-1])-(((a<0)|(b<0))?0:arr[a][b])-(((feat.i-1<0)|(feat.j+2*feat.w-1<0))?0:arr[feat.i-1][feat.j+2*feat.w-1])+(((feat.i-1<0)|(b<0))?0:arr[feat.i-1][b]);
-    return feat.w;
-    //return ((S1-S2)*c)/(2*feat.w*feat.h);
+	w = x;
+	a = i+h-1;
+	b = j+w-1;
+	S1=(((a<0)|(b<0))?0:arr[a][b])-(((a<0)|(j-1<0))?0:arr[a][j-1])-(((i-1<0)|(b<0))?0:arr[i-1][b])+(((i-1<0)|(j-1<0))?0:arr[i-1][j-1]);
+	S2=(((a<0)|(j+2*w-1<0))?0:arr[a][j+2*w-1])-(((a<0)|(b<0))?0:arr[a][b])-(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1])+(((i-1<0)|(b<0))?0:arr[i-1][b]);
+    
+    return ((S1-S2)*c)/(2*w*h);
+	//return y;
+    }
+    if(feat.t==2)
+    {
+	c=3*feat.w*feat.h;
+
     }
     return 0;
 }
