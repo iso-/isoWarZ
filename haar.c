@@ -17,12 +17,17 @@ int main()
 {   
     SDL_Surface *surface = NULL;
     surface = IMG_Load("image.png");	
-    
-    printf("%d\n%d\n%d\n%d\n%d\n%d\n%d\n", getpixel(surface,0,0), getpixel(surface,0,1), getpixel(surface,1,0),getpixel(surface,1,0),getpixel(surface,4,0),getpixel(surface,5,0),getpixel(surface,0,7));
+   int i=0;
+    //printf("%d\n%d\n%d\n%d\n%d\n%d\n%d\n", getpixel(surface,0,0), getpixel(surface,0,1), getpixel(surface,1,0),getpixel(surface,1,0),getpixel(surface,4,0),getpixel(surface,5,0),getpixel(surface,0,7));
     //printf("%d\n", arr[1][2]);
 	//printf("%d",nb_elements(haar3(surface)));
-    printf("%d\n",scaling(surface,(value(element_i(haar1(surface),2)))));
-   // printf("%d\n",(value(element_i(haar1(surface),0))).res);
+	while((i<27600)&&(scaling(surface,(value(element_i(haar4(surface),i))))==(value(element_i(haar4(surface),i))).res))
+	{
+	i++;
+	}
+	printf("%d",i);
+    //printf("%d\n",scaling(surface,(value(element_i(haar4(surface),3331)))));
+   // printf("%d\n",(value(element_i(haar4(surface),3331))).res);
     //browse(surface,24);
 }
 
@@ -197,12 +202,13 @@ int max(int a, int b)
 int scaling(SDL_Surface *image, feature feat)
 { 
     int a,b,c;
-    int x = 1;
-    int y = 1;
+    
     int w,i,j,h;
     int **arr = Integral(image);
+
     if(feat.t == 1)
     {
+	int x = 1;
 	c = 2*feat.w*feat.h;
 	i = (int)(round((feat.i*image->h)/24));
 	j = (int)(round((feat.j*image->h)/24));
@@ -212,7 +218,7 @@ int scaling(SDL_Surface *image, feature feat)
 	    x++;
 	}
 	
-	//y=(((int)(round(1+(2*feat.w*image->h)/24)))/2);
+	
 	int S1,S2;
 	w = x;
 	a = i+h-1;
@@ -221,14 +227,104 @@ int scaling(SDL_Surface *image, feature feat)
 	S2=(((a<0)|(j+2*w-1<0))?0:arr[a][j+2*w-1])-(((a<0)|(b<0))?0:arr[a][b])-(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1])+(((i-1<0)|(b<0))?0:arr[i-1][b]);
     
     return ((S1-S2)*c)/(2*w*h);
-	//return y;
+	
     }
+
     if(feat.t==2)
-    {
+    {	
+	int x=1;
+	i = (int)(round((feat.i*image->h)/24));
+	j = (int)(round((feat.j*image->h)/24));
+	h = (int)(round((feat.h*image->h)/24));
 	c=3*feat.w*feat.h;
+	while(x < (((int)(round(1+(3*feat.w*image->h)/24)))/3)&& 3*x<((image->h-j+1)))
+	{
+	    x++;
+	}
+	w=x;
+	int S1,S2,S3;
+	a = i+h-1;
+	b = j+w-1;
+	S1 = (((i+h-1<0)|(j+w-1<0))?0:arr[i+h-1][j+w-1])-(((i+h-1<0)|(j-1<0))?0:arr[i+h-1][j-1])-(((i-1<0)|(j+w-1<0))?0:arr[i-1][j+w-1])+(((i-1<0)|(j-1<0))?0:arr[i-1][j-1]);
+	S2=(((a<0)|(j+2*w-1<0))?0:arr[a][j+2*w-1])-(((a<0)|(b<0))?0:arr[a][b])-(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1])+(((i-1<0)|(b<0))?0:arr[i-1][b]);
+	S3 = (((i+h-1<0)|(j+3*w-1<0))?0:arr[i+h-1][j+3*w-1])-(((i+h-1<0)|(j+2*w-1<0))?0:arr[i+h-1][j+2*w-1])-(((i-1<0)|(j+3*w-1<0))?0:arr[i-1][j+3*w-1])+(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1]);
+
+    return ((S1-S2+S3)*c)/(3*w*h);
 
     }
-    return 0;
+
+    if(feat.t==3)
+    {
+	int x=1;
+	i = (int)(round((feat.i*image->h)/24));
+	j = (int)(round((feat.j*image->h)/24));
+	w = (int)(round((feat.w*image->h)/24));
+	c=2*feat.w*feat.h;
+	while(x < (((int)(round(1+(2*feat.h*image->h)/24)))/2)&& 2*x<((image->h-j+1)))
+	{
+	    x++;
+	}
+	h=x;
+	int S1,S2;
+	S1=(((i+h-1<0)|(j+w-1<0))?0:arr[i+h-1][j+w-1])-(((i+h-1<0)|(j-1<0))?0:arr[i+h-1][j-1])-(((i-1<0)|(j+w-1<0))?0:arr[i-1][j+w-1])+(((i-1<0)|(j-1<0))?0:arr[i-1][j-1]);
+        S2=(((i+2*h-1<0)|(j+w-1<0))?0:arr[i+2*h-1][j+w-1])-(((i+2*h-1<0)|(j-1<0))?0:arr[i+2*h-1][j-1])-(((i-1+h<0)|(j+w-1<0))?0:arr[i-1+h][j+w-1])+(((i-1+h<0)|(j-1<0))?0:arr[i-1+h][j-1]);
+
+    return ((S1-S2)*c)/(2*w*h);
+
+
+
+    }
+    
+    if(feat.t==4)
+    {
+	int x=1;
+	i = (int)(round((feat.i*image->h)/24));
+	j = (int)(round((feat.j*image->h)/24));
+	w = (int)(round((feat.w*image->h)/24));
+	c=3*feat.w*feat.h;
+	while(x < (((int)(round(1+(3*feat.h*image->h)/24)))/3)&& 3*x<((image->h-j+1)))
+	{
+	    x++;
+	}
+	h=x;
+	int S1,S2,S3;
+	S1 = (((i+h-1<0)|(j+w-1<0))?0:arr[i+h-1][j+w-1])-(((i+h-1<0)|(j-1<0))?0:arr[i+h-1][j-1])-(((i-1<0)|(j+w-1<0))?0:arr[i-1][j+w-1])+(((i-1<0)|(j-1<0))?0:arr[i-1][j-1]);
+	S2=(((i+2*h-1<0)|(j+w-1<0))?0:arr[i+2*h-1][j+w-1])-(((i+2*h-1<0)|(j-1<0))?0:arr[i+2*h-1][j-1])-(((i-1+h<0)|(j+w-1<0))?0:arr[i-1+h][j+w-1])+(((i-1+h<0)|(j-1<0))?0:arr[i-1+h][j-1]);
+	S3=(((i+3*h-1<0)|(j+w-1<0))?0:arr[i+3*h-1][j+w-1])-(((i+3*h-1<0)|(j-1<0))?0:arr[i+3*h-1][j-1])-(((i-1+2*h<0)|(j+w-1<0))?0:arr[i-1+2*h][j+w-1])+(((i-1+2*h<0)|(j-1<0))?0:arr[i-1+2*h][j-1]);
+	
+    return ((S1-S2+S3)*c)/(3*w*h);
+    }
+    
+    if(feat.t==5)
+    {
+	int x=1;
+	i = (int)(round((feat.i*image->h)/24));
+	j = (int)(round((feat.j*image->h)/24));
+	c=4*feat.w*feat.h;
+	while(x < (((int)(round(1+(2*feat.h*image->h)/24)))/2)&& 2*x<((image->h-j+1)))
+	{
+	    x++;
+	}
+	h=x;
+	 x=1;	
+	while(x < (((int)(round(1+(2*feat.w*image->h)/24)))/2)&& 2*x<((image->h-j+1)))
+	{
+	    x++;
+	}
+	w=x;
+	a = i+h-1;
+	b = j+w-1;
+	int S1,S2,S3,S4;
+	S1=(((a<0)|(b<0))?0:arr[a][b])-(((a<0)|(j-1<0))?0:arr[a][j-1])-(((i-1<0)|(b<0))?0:arr[i-1][b])+(((i-1<0)|(j-1<0))?0:arr[i-1][j-1]);
+	S2=(((i+2*h-1<0)|(j+w-1<0))?0:arr[i+2*h-1][j+w-1])-(((i+2*h-1<0)|(j-1<0))?0:arr[i+2*h-1][j-1])-(((i-1+h<0)|(j+w-1<0))?0:arr[i-1+h][j+w-1])+(((i-1+h<0)|(j-1<0))?0:arr[i-1+h][j-1]);
+	S3=(((a<0)|(j+2*w-1<0))?0:arr[a][j+2*w-1])-(((a<0)|(b<0))?0:arr[a][b])-(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1])+(((i-1<0)|(b<0))?0:arr[i-1][b]);
+	S4=(((i+2*h-1<0)|(j+2*w-1<0))?0:arr[i+2*h-1][j+2*w-1])-(((i+2*h-1<0)|(j+w-1<0))?0:arr[i+2*h-1][j+w-1])-(((i-1+h<0)|(j+2*w-1<0))?0:arr[i-1+h][j+2*w-1])+(((i-1+h<0)|(j+w-1<0))?0:arr[i-1+h][j+w-1]);
+	
+    return ((S1-S2-S3+S4)*c)/(4*w*h);
+	
+	
+    }
+return 0;
 }
 
 
