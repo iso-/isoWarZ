@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
-#include "pretraitement2.h"
+//#include "pretraitement2.h"
  
 /*int main()
 {
@@ -116,7 +116,7 @@ void goToGrey(SDL_Surface * surface)
 			}
 		}
 	
-
+    SDL_SaveBMP(surface,"icon2.bmp");
 SDL_UnlockSurface(surface);
 }
 void browse(SDL_Surface *image, int size)
