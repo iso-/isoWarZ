@@ -62,26 +62,32 @@ int dequeue(queue q, feature *val)
  
     return 1;
 }
+feature search(queue q,int n)
+{
+    node tmp = HEAD(q);	
+    while(n>0)
+	
+    {tmp = tmp->next;
+	n--;}
+    
+   
+ 
+    //HEAD(q) = tmp->next;
+    
+    
+ 
+    return tmp->f;
+}
 
 
-
-
-
-
-
-
-
-//list haarFusion(SDL_Surface *i);
-//list haarr(SDL_Surface *image);
-void haarr2(SDL_Surface *image,queue q);
-int max(int a, int b);
+queue haarr2(SDL_Surface *image);
 int scaling(SDL_Surface *image, feature feat);
 
 typedef struct example example;
 struct example
 {
     int label;
-    //list feat;
+    queue feat;
     int weight;
 };
 example* weightImage(size_t nb);
@@ -89,6 +95,6 @@ example* weightImage(size_t nb);
 static inline void swap(example* a, example* b);
 example* min_pos(example *arr, size_t len,int j);
 void sort (example *arr, int j,size_t taille);
-
+void bubblesort(example *tab, size_t len,int j);
 int* decision(example* arr, int j, int n);
 #endif

@@ -9,13 +9,17 @@ int main()
 {   
     SDL_Surface *surface = NULL;
 	surface = IMG_Load("face0001.png");
-	/*SDL_Surface *surface1 = NULL;
+	/*queue q=haarr2(surface);
+	
+	SDL_Surface *surface1 = NULL;
+	
 	SDL_Surface *surface2 = NULL;
-    surface = IMG_Load("face0001.png");
-surface1 = IMG_Load("face0002.png");
-surface2 = IMG_Load("face0003.png");*/
-    
-   /* example *ar = malloc(sizeof(int) * 3);
+       
+     surface1 = IMG_Load("face0002.png");
+     queue q1=haarr2(surface1);
+     surface2 = IMG_Load("face0003.png");
+     queue q2=haarr2(surface2);
+    example *ar = malloc(sizeof(int) * 3);
     example e,f,g;
     e.label = 1;
     f.label = -1;
@@ -23,28 +27,31 @@ surface2 = IMG_Load("face0003.png");*/
     e.weight = 0;
     f.weight = 3;
     g.weight = 6;
-	e.feat = haarr(surface);
- 	f.feat = haarr(surface1);
-	g.feat = haarr(surface2);*/
-    
-	/*ar[0] = e;
- 	ar[1] = f;
-	ar[2] = g;*/
-	//printf("%d\n",(value(element_i(ar[0].feat,0))).res);
-	//printf("%d\n",(value(element_i(ar[1].feat,0))).res);
-	//printf("%d\n",(value(element_i(ar[2].feat,0))).res);
-
 	
-	feature f;
-	queue q=q_new();
+	e.feat = q;
+ 	f.feat = q1;
+	g.feat = q2;
+    
+	ar[0] = e;
+ 	ar[1] = f;
+	ar[2] = g;
+	
+	
+	
+	printf("%d\n",(search(e.feat,0)).res);
+	printf("%d\n",(search(ar[1].feat,0)).res);
+	printf("%d\n",(search(ar[2].feat,0)).res);
+	bubblesort (ar,3,0);
+	printf("%d\n",(search(ar[0].feat,0)).res);
+	printf("%d\n",(search(ar[1].feat,0)).res);
+	printf("%d\n",(search(ar[2].feat,0)).res);
+	
+	*/
+	//feature f;
+	
 	//q = haarr2(surface);
-	haarr2(surface,q);
-	int i=0;
-	while(dequeue(q,&f)!=0)
-	{
-		i++;
-	}
-	printf("%d",i);
+	//haarr2(surface,q);
+	
    // l = haarFusion(surface);
 	//printf("%d\n",nb_elements(l));	
   
@@ -57,9 +64,9 @@ surface2 = IMG_Load("face0003.png");*/
    
 }
 
-void haarr2(SDL_Surface *image,queue q)
+queue haarr2(SDL_Surface *image)
 { 
-    
+    queue q=q_new();
     int **arr = Integral(image);
     int a,b;
     int S1, S2,S3,S4;
@@ -187,148 +194,15 @@ void haarr2(SDL_Surface *image,queue q)
 		}
 	}
     }
+	return q;
     
 }
 
 
 
-/*list haarr(SDL_Surface *image)
-{ 
-    list l = NULL;
-    int **arr = Integral(image);
-    int a,b;
-    int S1, S2, S3, S4;
-    for(int i=0; i<image->h; i++)
-    {
-	for(int j=0; j<image->w; j++)
-	{
-		for(int h=1; i+h-1<24; h++)
-		{
-			for(int w=1; j+2*w-1<24; w++)
-			{	
-				feature feat;
-				feat.t=1;
-				feat.i=i;
-				feat.j=j;
-				feat.w=w;
-				feat.h=h;
-				a = i+h-1;
-				b = j+w-1;
-				S1=(((a<0)|(b<0))?0:arr[a][b])-(((a<0)|(j-1<0))?0:arr[a][j-1])-(((i-1<0)|(b<0))?0:arr[i-1][b])+(((i-1<0)|(j-1<0))?0:arr[i-1][j-1]);
-				S2=(((a<0)|(j+2*w-1<0))?0:arr[a][j+2*w-1])-(((a<0)|(b<0))?0:arr[a][b])-(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1])+(((i-1<0)|(b<0))?0:arr[i-1][b]);
-				feat.res=S1-S2;
-				l = add_list(l, feat);
-			}
-		}
-	}
-    }
 
-    for(int i=0; i<image->h; i++)
-    {
-	for(int j=0; j<image->w; j++)
-	{
-		for(int h=1; i+h-1<24; h++)
-		{
-			for(int w=1; j+3*w-1<24; w++)
-			{	
-				feature feat;
-				feat.t=2;
-				feat.i=i;
-				feat.j=j;
-				feat.w=w;
-				feat.h=h;
-				a = i+h-1;
-				b = j+w-1;
- 				S1 = (((i+h-1<0)|(j+w-1<0))?0:arr[i+h-1][j+w-1])-(((i+h-1<0)|(j-1<0))?0:arr[i+h-1][j-1])-(((i-1<0)|(j+w-1<0))?0:arr[i-1][j+w-1])+(((i-1<0)|(j-1<0))?0:arr[i-1][j-1]);
-				S2=(((a<0)|(j+2*w-1<0))?0:arr[a][j+2*w-1])-(((a<0)|(b<0))?0:arr[a][b])-(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1])+(((i-1<0)|(b<0))?0:arr[i-1][b]);
-				S3 = (((i+h-1<0)|(j+3*w-1<0))?0:arr[i+h-1][j+3*w-1])-(((i+h-1<0)|(j+2*w-1<0))?0:arr[i+h-1][j+2*w-1])-(((i-1<0)|(j+3*w-1<0))?0:arr[i-1][j+3*w-1])+(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1]);
-				feat.res = S1-S2+S3;
-				l = add_list(l, feat);
-			}
-		}
-	}
-    }
 
-    for(int i=0; i<image->h; i++)
-    {
-	for(int j=0; j<image->w; j++)
-	{
-		for(int h=1; i+2*h-1<24; h++)
-		{
-			for(int w=1; j+w-1<24; w++)
-			{	
-				feature feat;
-				feat.t=3;
-				feat.i=i;
-				feat.j=j;
-				feat.w=w;
-				feat.h=h;
-  				S1=(((i+h-1<0)|(j+w-1<0))?0:arr[i+h-1][j+w-1])-(((i+h-1<0)|(j-1<0))?0:arr[i+h-1][j-1])-(((i-1<0)|(j+w-1<0))?0:arr[i-1][j+w-1])+(((i-1<0)|(j-1<0))?0:arr[i-1][j-1]);
-                              S2=(((i+2*h-1<0)|(j+w-1<0))?0:arr[i+2*h-1][j+w-1])-(((i+2*h-1<0)|(j-1<0))?0:arr[i+2*h-1][j-1])-(((i-1+h<0)|(j+w-1<0))?0:arr[i-1+h][j+w-1])+(((i-1+h<0)|(j-1<0))?0:arr[i-1+h][j-1]);
-				feat.res = S1-S2;
-				l = add_list(l, feat);
-			}
-		}
-	}
-    }
- 
-    for(int i=0; i<image->w; i++)
-    {
-	for(int j=0; j<image->h; j++)
-	{
-		for(int h=1; i+3*h-1<24; h++)
-		{
-			for(int w=1; j+w-1<24; w++)
-			{	
-				feature feat;
-				feat.t=4;
-				feat.i=i;
-				feat.j=j;
-				feat.w=w;
-				feat.h=h;
-				S1 = (((i+h-1<0)|(j+w-1<0))?0:arr[i+h-1][j+w-1])-(((i+h-1<0)|(j-1<0))?0:arr[i+h-1][j-1])-(((i-1<0)|(j+w-1<0))?0:arr[i-1][j+w-1])+(((i-1<0)|(j-1<0))?0:arr[i-1][j-1]);
-				S2=(((i+2*h-1<0)|(j+w-1<0))?0:arr[i+2*h-1][j+w-1])-(((i+2*h-1<0)|(j-1<0))?0:arr[i+2*h-1][j-1])-(((i-1+h<0)|(j+w-1<0))?0:arr[i-1+h][j+w-1])+(((i-1+h<0)|(j-1<0))?0:arr[i-1+h][j-1]);
-				S3=(((i+3*h-1<0)|(j+w-1<0))?0:arr[i+3*h-1][j+w-1])-(((i+3*h-1<0)|(j-1<0))?0:arr[i+3*h-1][j-1])-(((i-1+2*h<0)|(j+w-1<0))?0:arr[i-1+2*h][j+w-1])+(((i-1+2*h<0)|(j-1<0))?0:arr[i-1+2*h][j-1]);
-				feat.res = S1-S2+S3;
-				l = add_list(l, feat);
-			}
-		}
-	}
-    }
 
-    for(int i=0; i<image->w; i++)
-    {
-	for(int j=0; j<image->h; j++)
-	{
-		for(int h=1; i+2*h-1<24; h++)
-		{
-			for(int w=1; j+2*w-1<24; w++)
-			{	
-				feature feat;
-				feat.t=5;
-				feat.i=i;
-				feat.j=j;
-				feat.w=w;
-				feat.h=h;
-				a = i+h-1;
-				b = j+w-1;
-				S1=(((a<0)|(b<0))?0:arr[a][b])-(((a<0)|(j-1<0))?0:arr[a][j-1])-(((i-1<0)|(b<0))?0:arr[i-1][b])+(((i-1<0)|(j-1<0))?0:arr[i-1][j-1]);
-				S2=(((i+2*h-1<0)|(j+w-1<0))?0:arr[i+2*h-1][j+w-1])-(((i+2*h-1<0)|(j-1<0))?0:arr[i+2*h-1][j-1])-(((i-1+h<0)|(j+w-1<0))?0:arr[i-1+h][j+w-1])+(((i-1+h<0)|(j-1<0))?0:arr[i-1+h][j-1]);
-				S3=(((a<0)|(j+2*w-1<0))?0:arr[a][j+2*w-1])-(((a<0)|(b<0))?0:arr[a][b])-(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1])+(((i-1<0)|(b<0))?0:arr[i-1][b]);
-				S4=(((i+2*h-1<0)|(j+2*w-1<0))?0:arr[i+2*h-1][j+2*w-1])-(((i+2*h-1<0)|(j+w-1<0))?0:arr[i+2*h-1][j+w-1])-(((i-1+h<0)|(j+2*w-1<0))?0:arr[i-1+h][j+2*w-1])+(((i-1+h<0)|(j+w-1<0))?0:arr[i-1+h][j+w-1]);
-				feat.res = S1-S2-S3+S4;
-				l = add_list(l, feat);
-			}
-		}
-	}
-    }
-    return l;
-}*/
-
-int max(int a, int b)
-{
-    return (a<b)?b:a;
-}
 
 int scaling(SDL_Surface *image, feature feat)
 { 
@@ -488,35 +362,38 @@ static inline void swap(example* a, example* b)
   *a = *b;
   *b = temp;
 }
-
-/*example* min_pos(example* arr, size_t len,int j)
+void bubblesort(example *tab, size_t len,int j)
 {
-    example* min=&arr[0];
-        for (size_t i=1;i<len;i++)
-        {
-            if((value(element_i(arr[i].feat,j)).res) < (value(element_i((*min).feat,j)).res))
-        {
-            min=&arr[i];
-        }
-        }
-    return min;
+     example tmp;
+	int permutation=1;
+	size_t i;
+     while (permutation == 1)
+     {
+       permutation = 0;
+       for (i=0; i<len-1; i++)
+       {
+	 
+	 
+	
+         if ((search(tab[i].feat,j)).res >  (search(tab[i+1].feat,j)).res)
+         {
+         tmp = tab[i];
+         tab[i] = tab[i+1];
+         tab[i+1] = tmp;
+           /* Il y a eu permutation */
+         permutation = 1;
+         }
+       } 
+      } /* while */
+ 
 }
 
-void sort (example *arr, int j,size_t taille)
-{
-    example* min = NULL;
-        for(size_t i=0; i<=taille-2; i++)
-        {
-          example* pos=&arr[i];
-          min = min_pos(arr+i,taille-i,j);
-          swap(min,pos);
-        }
-}
+
 
 int* decision(example* arr, int j, int n)
 {
     int *ar = malloc(sizeof(int) * 4);
-    int treshold = (value(element_i(arr[0].feat,j)).res)-1;
+    int treshold = (search(arr[0].feat,j).res)-1;
     int margin = 0;
     int error = 2;
     int toggle = 1;
@@ -527,8 +404,8 @@ int* decision(example* arr, int j, int n)
     for(int i=0; i<n; i++)
     {
       if(arr[i].label == 1)
-      {
-        if((value(element_i(arr[i].feat,j)).res) > treshold)
+      {		
+        if((search(arr[i].feat,j).res) > treshold)
         {
           w1 = w1 + arr[i].weight;
         }
@@ -538,7 +415,7 @@ int* decision(example* arr, int j, int n)
     {
       if(arr[i].label == -1)
       {
-        if((value(element_i(arr[i].feat,j)).res) > treshold)
+        if((search(arr[i].feat,j).res) > treshold)
         {
           w2 = w2 + arr[i].weight;
         }
@@ -548,7 +425,7 @@ int* decision(example* arr, int j, int n)
     {
       if(arr[i].label == 1)
       {
-        if((value(element_i(arr[i].feat,j)).res) < treshold)
+        if((search(arr[i].feat,j).res) < treshold)
         {
           w3 = w3 + arr[i].weight;
         }
@@ -558,7 +435,7 @@ int* decision(example* arr, int j, int n)
     {
       if(arr[i].label == -1)
       {
-        if((value(element_i(arr[i].feat,j)).res) < treshold)
+        if((search(arr[i].feat,j).res) < treshold)
         {
           w4 = w4 + arr[i].weight;
         }
@@ -611,7 +488,7 @@ int* decision(example* arr, int j, int n)
           w3 = w3+arr[k].weight;
           w1 = w1-arr[k].weight;
         }
-        if((k==n) || ((value(element_i(arr[k].feat,j)).res) != (value(element_i(arr[k+1].feat,j)).res)))
+        if((k==n) || ((search(arr[k].feat,j).res) != (search(arr[k+1].feat,j).res)))
         {
           break;
         }
@@ -622,13 +499,13 @@ int* decision(example* arr, int j, int n)
       }
       if(k == n)
       {
-        ntreshold = (value(element_i(arr[n-1].feat,j)).res);
+        ntreshold = (search(arr[n-1].feat,j).res);
         nmargin = 0;
       }
       else
       {
-        ntreshold = ((value(element_i(arr[k].feat,j)).res)+(value(element_i(arr[k+1].feat,j)).res))/2;
-        nmargin = (value(element_i(arr[k+1].feat,j)).res) - (value(element_i(arr[k].feat,j)).res);
+        ntreshold = (search(arr[k].feat,j).res)+(search(arr[k+1].feat,j).res)/2;
+        nmargin = (search(arr[k+1].feat,j).res) - (search(arr[k].feat,j).res);
       }
     }
     ar[0] = treshold;
@@ -637,4 +514,24 @@ int* decision(example* arr, int j, int n)
     ar[3] = margin;
 
     return ar;
-}*/
+}
+
+int *Beststump (example* arr,int d,int n)
+{
+int *ar = malloc(sizeof(int) * 4);
+ar[2]=2;
+for (int i=0;i<d;i++)
+{
+	
+int *ar2=decision(arr,i,n);
+if((ar2[2]>ar[2])|(ar2[3]>2))
+	{
+		if(ar2[2]==2)
+		{
+			ar[2]=ar2[2];
+		}
+}
+
+}
+}
+
