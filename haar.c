@@ -34,9 +34,17 @@ surface2 = IMG_Load("face0003.png");*/
 	//printf("%d\n",(value(element_i(ar[1].feat,0))).res);
 	//printf("%d\n",(value(element_i(ar[2].feat,0))).res);
 
-	//queue *q;
+	
+	feature f;
+	queue q=q_new();
 	//q = haarr2(surface);
-	printf("%d\n",(element_n(haarr2(surface),0)).res);
+	haarr2(surface,q);
+	int i=0;
+	while(dequeue(q,&f)!=0)
+	{
+		i++;
+	}
+	printf("%d",i);
    // l = haarFusion(surface);
 	//printf("%d\n",nb_elements(l));	
   
@@ -49,13 +57,12 @@ surface2 = IMG_Load("face0003.png");*/
    
 }
 
-queue* haarr2(SDL_Surface *image)
+void haarr2(SDL_Surface *image,queue q)
 { 
-    queue *q;
-    init(q);
+    
     int **arr = Integral(image);
     int a,b;
-    int S1, S2;
+    int S1, S2,S3,S4;
     for(int i=0; i<image->h; i++)
     {
 	for(int j=0; j<image->w; j++)
@@ -75,13 +82,13 @@ queue* haarr2(SDL_Surface *image)
 				S1=(((a<0)|(b<0))?0:arr[a][b])-(((a<0)|(j-1<0))?0:arr[a][j-1])-(((i-1<0)|(b<0))?0:arr[i-1][b])+(((i-1<0)|(j-1<0))?0:arr[i-1][j-1]);
 				S2=(((a<0)|(j+2*w-1<0))?0:arr[a][j+2*w-1])-(((a<0)|(b<0))?0:arr[a][b])-(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1])+(((i-1<0)|(b<0))?0:arr[i-1][b]);
 				feat.res=S1-S2;
-				push(q, type.last, feat);
+				enqueue(q,feat);
 			}
 		}
 	}
     }
 
-   /* for(int i=0; i<image->h; i++)
+    for(int i=0; i<image->h; i++)
     {
 	for(int j=0; j<image->w; j++)
 	{
@@ -101,7 +108,7 @@ queue* haarr2(SDL_Surface *image)
 				S2=(((a<0)|(j+2*w-1<0))?0:arr[a][j+2*w-1])-(((a<0)|(b<0))?0:arr[a][b])-(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1])+(((i-1<0)|(b<0))?0:arr[i-1][b]);
 				S3 = (((i+h-1<0)|(j+3*w-1<0))?0:arr[i+h-1][j+3*w-1])-(((i+h-1<0)|(j+2*w-1<0))?0:arr[i+h-1][j+2*w-1])-(((i-1<0)|(j+3*w-1<0))?0:arr[i-1][j+3*w-1])+(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1]);
 				feat.res = S1-S2+S3;
-				l = add_list(l, feat);
+				enqueue(q,feat);
 			}
 		}
 	}
@@ -124,7 +131,7 @@ queue* haarr2(SDL_Surface *image)
   				S1=(((i+h-1<0)|(j+w-1<0))?0:arr[i+h-1][j+w-1])-(((i+h-1<0)|(j-1<0))?0:arr[i+h-1][j-1])-(((i-1<0)|(j+w-1<0))?0:arr[i-1][j+w-1])+(((i-1<0)|(j-1<0))?0:arr[i-1][j-1]);
                               S2=(((i+2*h-1<0)|(j+w-1<0))?0:arr[i+2*h-1][j+w-1])-(((i+2*h-1<0)|(j-1<0))?0:arr[i+2*h-1][j-1])-(((i-1+h<0)|(j+w-1<0))?0:arr[i-1+h][j+w-1])+(((i-1+h<0)|(j-1<0))?0:arr[i-1+h][j-1]);
 				feat.res = S1-S2;
-				l = add_list(l, feat);
+				enqueue(q,feat);
 			}
 		}
 	}
@@ -148,7 +155,7 @@ queue* haarr2(SDL_Surface *image)
 				S2=(((i+2*h-1<0)|(j+w-1<0))?0:arr[i+2*h-1][j+w-1])-(((i+2*h-1<0)|(j-1<0))?0:arr[i+2*h-1][j-1])-(((i-1+h<0)|(j+w-1<0))?0:arr[i-1+h][j+w-1])+(((i-1+h<0)|(j-1<0))?0:arr[i-1+h][j-1]);
 				S3=(((i+3*h-1<0)|(j+w-1<0))?0:arr[i+3*h-1][j+w-1])-(((i+3*h-1<0)|(j-1<0))?0:arr[i+3*h-1][j-1])-(((i-1+2*h<0)|(j+w-1<0))?0:arr[i-1+2*h][j+w-1])+(((i-1+2*h<0)|(j-1<0))?0:arr[i-1+2*h][j-1]);
 				feat.res = S1-S2+S3;
-				l = add_list(l, feat);
+				enqueue(q,feat);
 			}
 		}
 	}
@@ -175,35 +182,15 @@ queue* haarr2(SDL_Surface *image)
 				S3=(((a<0)|(j+2*w-1<0))?0:arr[a][j+2*w-1])-(((a<0)|(b<0))?0:arr[a][b])-(((i-1<0)|(j+2*w-1<0))?0:arr[i-1][j+2*w-1])+(((i-1<0)|(b<0))?0:arr[i-1][b]);
 				S4=(((i+2*h-1<0)|(j+2*w-1<0))?0:arr[i+2*h-1][j+2*w-1])-(((i+2*h-1<0)|(j+w-1<0))?0:arr[i+2*h-1][j+w-1])-(((i-1+h<0)|(j+2*w-1<0))?0:arr[i-1+h][j+2*w-1])+(((i-1+h<0)|(j+w-1<0))?0:arr[i-1+h][j+w-1]);
 				feat.res = S1-S2-S3+S4;
-				l = add_list(l, feat);
+				enqueue(q,feat);
 			}
 		}
 	}
-    }*/
-    return q;
+    }
+    
 }
 
-/*list haarFusion(SDL_Surface *i)
-{
-  list h1 = NULL;
-  list h2 = NULL;	
-  list h3 = NULL;
-  list h4 = NULL;
-  list h5 = NULL;
 
-  h1 = haar1(i);
-  h2 = haar2(i);
-  h3 = haar3(i);
-  h4 = haar4(i);
-  h5 = haar5(i);
-
-  h1 = fusion(h1,h2);
-  h1 = fusion(h1,h3);
-  h1 = fusion(h1,h4);
-  h1 = fusion(h1,h5);
-  
-  return h1;
-}*/
 
 /*list haarr(SDL_Surface *image)
 { 
@@ -468,7 +455,7 @@ int scaling(SDL_Surface *image, feature feat)
     }
 return 0;
 }
-example* weightImage(size_t nb)  //fonction qui s'occupe de charger les images pour classifieurs faibles, en leur assignant 1 ou -1
+/*example* weightImage(size_t nb)  //fonction qui s'occupe de charger les images pour classifieurs faibles, en leur assignant 1 ou -1
 {			
     example *arr = malloc(sizeof(int) * nb);
     for(size_t i=0; i<nb; i++)
@@ -494,7 +481,7 @@ example* weightImage(size_t nb)  //fonction qui s'occupe de charger les images p
     }
     return arr;
 }
-
+*/
 static inline void swap(example* a, example* b)
 {
   example temp = *a;
@@ -502,7 +489,7 @@ static inline void swap(example* a, example* b)
   *b = temp;
 }
 
-example* min_pos(example* arr, size_t len,int j)
+/*example* min_pos(example* arr, size_t len,int j)
 {
     example* min=&arr[0];
         for (size_t i=1;i<len;i++)
@@ -650,4 +637,4 @@ int* decision(example* arr, int j, int n)
     ar[3] = margin;
 
     return ar;
-}
+}*/
