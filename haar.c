@@ -4,11 +4,73 @@
 # include <SDL/SDL_image.h>
 # include "haar.h"
 # include <math.h>
+# include <dirent.h>
+# include <string.h>
+
 
 int main()
 {   
-    SDL_Surface *surface = NULL;
-	surface = IMG_Load("face0001.png");
+	
+
+	example* arr;
+	//char* file1 = "visage";
+	//char* file2 = "/home/iso/isoWarZ/isoWarZ/nonvisage";
+	arr = weightImage(800);
+	//printf("%d\n", 
+	/*DIR* rep = NULL;
+	rep = opendir("/home/iso/isoWarZ/isoWarZ/visage");
+	struct dirent* filel = NULL;
+	if(rep == NULL)
+	perror("erreur :");
+	printf("le dossier a été ouvert correctement\n");*/
+
+	//char old[1000];
+	/*const char* old = "face0001.png";
+	const char* new = ".png";
+	int i =1;*/
+	//char buff[35];
+	//printf("nom : %s\n", filel->d_name);
+		
+	/*sprintf(buff,"%d", i);
+	strcat(buff, new);
+	if(rename(old, new)==-1)
+		{
+			printf("nom : %s\n", filel->d_name);
+			//perror("rename");
+		}*/
+	//for(int i=1; i<300; i++)
+	//{
+		//sprintf(buff,"%d", i);
+		//strcat(old, (char)i);
+		//strcat(old, ".png");
+	/*while((filel = readdir(rep)) != NULL)
+	{
+		char buff[15];
+	//printf("nom : %s\n", filel->d_name);
+		
+		sprintf(buff,"%d", (i+1));
+		char* data;
+		data = filel->d_name;
+		//if(rename(filel->d_name, strcat(buff, new))==-1)
+		if(data[0] != '.')
+		{
+			printf("nom : %s\n", filel->d_name);
+			//perror("rename");
+			i++;
+		}
+		
+	}
+		printf("%d\n", i);*/
+		//new = i + ".png";
+		
+	//}
+	//closedir(rep);
+	return 0;
+	//DIR* dir = NULL;
+	//dir = opendir("visage");
+	//rename("face0001.png", "1.png");
+   // SDL_Surface *surface = NULL;
+	//surface = IMG_Load("face0001.png");
 	/*queue q=haarr2(surface);
 	
 	SDL_Surface *surface1 = NULL;
@@ -36,8 +98,6 @@ int main()
  	ar[1] = f;
 	ar[2] = g;
 	
-	
-	
 	printf("%d\n",(search(e.feat,0)).res);
 	printf("%d\n",(search(ar[1].feat,0)).res);
 	printf("%d\n",(search(ar[2].feat,0)).res);
@@ -64,9 +124,61 @@ int main()
    
 }
 
+example* weightImage(size_t nb) 
+{	
+	DIR* rep = NULL;
+	rep = opendir("/home/iso/isoWarZ/isoWarZ/visage");
+	struct dirent* filel = NULL;
+	if(rep == NULL)
+	perror("erreur :");
+	//printf("le dossier a été ouvert correctement\n");
+	int i = 0;
+	example *arr = malloc(sizeof(int) * nb);
+
+	while((filel = readdir(rep)) != NULL)
+	{
+		char* data;
+		data = filel->d_name;
+		if(data[0] != '.')
+		{
+			SDL_Surface *surf = NULL;
+			printf("nom : %s\n", filel->d_name);
+			example e;
+			surf = IMG_Load(data);
+		   	 e.label = 1;
+		    	e.weight = 1/600;
+			e.feat = haarr2(surf);
+			arr[i] = e;
+			i++;
+			SDL_FreeSurface(surf);
+		}
+	}
+		printf("%d\n", i);
+
+		
+	//printf("%d", i);
+    /*rep = opendir(filename2);
+    if(rep == NULL)
+	perror("erreur :");
+    filel = NULL;
+    while((filel = readdir(rep)) != NULL)
+    {	
+	example e;
+	SDL_Surface *surf = NULL;
+	surf = IMG_Load(filel->d_name);
+	    e.label = -1;
+	    e.weight = 1/(1000);
+	e.feat = haarr2(surf);
+	arr[i] = e;
+	i++;
+    } */
+   //closedir(rep);
+    return arr;
+}
+
 queue haarr2(SDL_Surface *image)
 { 
-    queue q=q_new();
+    queue q = q_new();
     int **arr = Integral(image);
     int a,b,c,d,e,f;
     int S1, S2,S3,S4;
@@ -361,33 +473,8 @@ int scaling(SDL_Surface *image, feature feat)
     }
   return 0;
 }
-/*example* weightImage(size_t nb)  //fonction qui s'occupe de charger les images pour classifieurs faibles, en leur assignant 1 ou -1
-{			
-    example *arr = malloc(sizeof(int) * nb);
-    for(size_t i=0; i<nb; i++)
-    {
-	//char duff[6];
-	example e;
-	//itoa((int)i, duff, 10);
-	//strcat(duff,".png");
-	SDL_Surface *surf = NULL;
-	surf = IMG_Load("noir.png");
-	if(i<300)
-	{
-	    e.label = 1;
-	    e.weight = 1/600;
-	}
-	else
-	{
-	    e.label = -1; 	
-	    e.weight = 1/1000;
-	}
-	e.feat = haarr(surf);
-	arr[i] = e;
-    }
-    return arr;
-}
-*/
+
+
 static inline void swap(example* a, example* b)
 {
   example temp = *a;
@@ -403,10 +490,7 @@ void bubblesort(example *tab, size_t len,int j)
      {
        permutation = 0;
        for (i=0; i<len-1; i++)
-       {
-	 
-	 
-	
+       { 
          if ((search(tab[i].feat,j)).res >  (search(tab[i+1].feat,j)).res)
          {
          tmp = tab[i];
@@ -417,10 +501,7 @@ void bubblesort(example *tab, size_t len,int j)
          }
        } 
       } /* while */
- 
 }
-
-
 
 int* decision(example* arr, int j, int n)
 {
@@ -550,20 +631,24 @@ int* decision(example* arr, int j, int n)
 
 int *Beststump (example* arr,int d,int n)
 {
-int *ar = malloc(sizeof(int) * 4);
-ar[2]=2;
-for (int i=0;i<d;i++)
+	int *ar = malloc(sizeof(int) * 4);
+	ar[2]=2;
+	for (int i=0; i<d; i++)
+	{
+		int *ar2 = decision(arr,i,n);
+		if((ar2[2]>ar[2])|(ar2[3]>2))
+		{
+			if(ar2[2]==ar[2])
+			{
+				ar[2]=ar2[2];
+			}
+		}
+
+	}
+  return ar;
+}
+
+/*void adaboost(example* arr, int T)
 {
 	
-int *ar2=decision(arr,i,n);
-if((ar2[2]>ar[2])|(ar2[3]>2))
-	{
-		if(ar2[2]==2)
-		{
-			ar[2]=ar2[2];
-		}
-}
-
-}
-}
-
+}*/

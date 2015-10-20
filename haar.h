@@ -16,12 +16,6 @@ struct feature
     int res;
 };
 
-
-
-
-
-
-
 typedef struct node_t node_t, *node, *queue;
 struct node_t { feature f; node prev, next; };
  
@@ -91,6 +85,18 @@ struct example
     int weight;
 };
 example* weightImage(size_t nb);
+
+//int decisionStump(
+/*typedef struct data data
+struct data
+{
+  int treshold;
+  int toggle;
+  int error;
+  int margin;
+  int stump;
+  feature feat;
+}*/
 
 static inline void swap(example* a, example* b);
 example* min_pos(example *arr, size_t len,int j);
