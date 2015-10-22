@@ -8,14 +8,31 @@
 # include <string.h>
 
 
+
+void str_cat(char *dest, const char *src)
+{
+
+    while (*dest!= '\0')
+        *dest++ ;
+    do
+    {
+        *dest++ = *src++;
+    }
+    while (*src != '\0') ;
+}
+
+
 int main()
 {   
-	
-
-	example* arr;
+	char* data="face0164.png";
+	 const char* f=data;
+			char* file="visage/";
+			
+			str_cat(file,f);
+	printf("%s\n",file);
 	//char* file1 = "visage";
 	//char* file2 = "/home/iso/isoWarZ/isoWarZ/nonvisage";
-	arr = weightImage(800);
+	//weightImage(800);
 	//printf("%d\n", 
 	/*DIR* rep = NULL;
 	rep = opendir("/home/iso/isoWarZ/isoWarZ/visage");
@@ -127,30 +144,35 @@ int main()
 example* weightImage(size_t nb) 
 {	
 	DIR* rep = NULL;
-	rep = opendir("/home/iso/isoWarZ/isoWarZ/visage");
+	rep = opendir("visage");
 	struct dirent* filel = NULL;
 	if(rep == NULL)
 	perror("erreur :");
 	//printf("le dossier a été ouvert correctement\n");
 	int i = 0;
-	example *arr = malloc(sizeof(int) * nb);
+	example *array = malloc(sizeof(example) * nb);
 
 	while((filel = readdir(rep)) != NULL)
 	{
-		char* data;
+		char* data="";
 		data = filel->d_name;
 		if(data[0] != '.')
-		{
-			SDL_Surface *surf = NULL;
-			printf("nom : %s\n", filel->d_name);
+		{	
+			const char* f=data;
+			char* file="visage/";
+			SDL_Surface *win = NULL;
+			strcat(file,f);
+			printf("%s\n", file);
+			win =IMG_Load(file);
 			example e;
-			surf = IMG_Load(data);
+			e.feat=haarr2(win);
 		   	 e.label = 1;
 		    	e.weight = 1/600;
-			e.feat = haarr2(surf);
-			arr[i] = e;
+			
+			array[i] = e;
+			SDL_FreeSurface(win);
 			i++;
-			SDL_FreeSurface(surf);
+			
 		}
 	}
 		printf("%d\n", i);
@@ -173,7 +195,7 @@ example* weightImage(size_t nb)
 	i++;
     } */
    //closedir(rep);
-    return arr;
+    return array;
 }
 
 queue haarr2(SDL_Surface *image)
