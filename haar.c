@@ -9,7 +9,7 @@
 
 
 
-void str_cat(char *dest, const char *src)
+/*void str_cat(char *dest, const char *src)
 {
 
     while (*dest!= '\0')
@@ -19,20 +19,22 @@ void str_cat(char *dest, const char *src)
         *dest++ = *src++;
     }
     while (*src != '\0') ;
-}
+}*/
 
 
 int main()
 {   
-	char* data="face0164.png";
-	 const char* f=data;
-			char* file="visage/";
+	/*char data[500]="face0164.png";
+	 //const char fza[500]=data;
+			char file[500]="visage/";
 			
-			str_cat(file,f);
-	printf("%s\n",file);
+			strcat(file,data);
+	printf("%s\n",file);*/
 	//char* file1 = "visage";
 	//char* file2 = "/home/iso/isoWarZ/isoWarZ/nonvisage";
-	//weightImage(800);
+	example* arr;
+	arr = weightImage(900);
+	//printf("%d\n",(search(arr[0].feat,0)).res);
 	//printf("%d\n", 
 	/*DIR* rep = NULL;
 	rep = opendir("/home/iso/isoWarZ/isoWarZ/visage");
@@ -154,25 +156,24 @@ example* weightImage(size_t nb)
 
 	while((filel = readdir(rep)) != NULL)
 	{
-		char* data="";
-		data = filel->d_name;
+		char* data = filel->d_name;
 		if(data[0] != '.')
 		{	
-			const char* f=data;
-			char* file="visage/";
+			//const char* f=data;
+			char file[40]="visage/";
 			SDL_Surface *win = NULL;
-			strcat(file,f);
+			strcat(file,data);
 			printf("%s\n", file);
-			win =IMG_Load(file);
+			win = IMG_Load(file);
 			example e;
-			e.feat=haarr2(win);
-		   	 e.label = 1;
-		    	e.weight = 1/600;
+			e.feat = haarr2(win);
+		   	e.label = 1;
+		    	e.weight = 1/598;
 			
 			array[i] = e;
 			SDL_FreeSurface(win);
 			i++;
-			
+			printf("%d\n", i);
 		}
 	}
 		printf("%d\n", i);
