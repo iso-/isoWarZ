@@ -32,8 +32,11 @@ int main()
 	printf("%s\n",file);*/
 	//char* file1 = "visage";
 	//char* file2 = "/home/iso/isoWarZ/isoWarZ/nonvisage";
-	example* arr;
-	arr = weightImage(800);
+	//example* arr;
+	image tab[299];
+	fill_array(tab, 299);
+	weightImage(tab, 299, 400);
+	//arr = weightImage(800);
 	//printf("%d\n",(search(arr[71].feat,2)).res);
 	//printf("%d\n", 
 	/*DIR* rep = NULL;
@@ -143,16 +146,15 @@ int main()
    
 }
 
-
-example* weightImage(size_t nb) 
-{	
-	DIR* rep = NULL;
-	rep = opendir("visage");
-	struct dirent* filel = NULL;
-	example *array = malloc(sizeof(example) * nb);
-	image tab[299];
-	int i = 0;
-	if(rep != NULL)
+static void fill_array(image tab[], size_t len)
+{
+  DIR* rep = NULL;
+  rep = opendir("visage");
+  struct dirent* filel = NULL;
+	//int n =0;
+  for(size_t i=0; i<len; i++)
+  {
+    if(rep != NULL)
 	{
 
 		while((filel = readdir(rep)) != NULL)
@@ -161,23 +163,29 @@ example* weightImage(size_t nb)
 			char *data = filel->d_name;
 			if(data[0] != '.')
 			{
-			strcat(file,data);
-			image picture;
-			picture.name = file;
-			tab[i] = picture;
-			//printf("%s\n", tab[i].name);
-			i++;
+				strcat(file,data);
+				image picture;
+				picture.name = file;
+				tab[i] = picture;
+				//printf("%d\n", n);
+				//n++;
+				//printf("%s\n", tab[i].name);
 			}
 		}
-		//closedir(rep);
-	printf("%s\n", tab[298].name);
+	//printf("%s\n", tab[298].name);
 	}
-	//int nb = i;
+  }
+	closedir(rep);	
+}
+
+example* weightImage(image tab[], size_t len, int nb) 
+{	
+	example *array = malloc(sizeof(example) * nb);
 		//printf("%s\n", tab[0].name);
-		/*for(int j=tab; j<=i; j++)
+		for(size_t i=0; i<len; i++)
 		{
-				SDL_Surface *win = NULL;
-				printf("%s\n", tab[j].name);
+				//SDL_Surface *win = NULL;
+				printf("%s\n", tab[i].name);
 				//win = IMG_Load(*tab[j]);
 				//example e;
 				//e.feat = haarr2(win);
@@ -186,7 +194,7 @@ example* weightImage(size_t nb)
 				//array[i] = e;
 				//SDL_FreeSurface(win);
 				//printf("%d\n", i);
-		}*/
+		}
 		
 		//printf("le dossier a été ouvert correctement\n");
 		
@@ -285,7 +293,7 @@ example* weightImage(size_t nb)
 	i++;
     } */
    //closedir(rep);
-    return array;
+   return array;
 }
 
 queue haarr2(SDL_Surface *image)
