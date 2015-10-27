@@ -15,6 +15,11 @@ struct feature
     int w;
     int res;
 };
+typedef struct image image;
+struct image
+{
+  char* name;
+};
 
 typedef struct node_t node_t, *node, *queue;
 struct node_t { feature f; node prev, next; };
@@ -84,7 +89,9 @@ struct example
     queue feat;
     int weight;
 };
-example* weightImage(size_t nb);
+static void fill_array(image tab[], int len);
+example* weightImage(image tab[], int len, int nb); 
+//example* weightImage(size_t nb);
 
 //int decisionStump(
 /*typedef struct data data
