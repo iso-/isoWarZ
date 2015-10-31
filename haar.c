@@ -34,18 +34,18 @@ int main()
 	//char* file2 = "/home/iso/isoWarZ/isoWarZ/nonvisage";
 	
 	example* arr;
-	image *tab = malloc(798*sizeof(image));
+	image *tab = malloc(797*sizeof(image));
 	
-	arr=weightImage(tab, 798, 798);
+	arr=weightImage(tab, 797, 797);
 	
 	
 	
-	bubblesort(arr,299,100);
+	//bubblesort(arr,797,10);
 	
 
-	float *t=decision(arr,100,299);
-	printf("%f",t[2]);
-	//adaboost(arr,20,298);
+	
+	
+	adaboost(arr,20,796);
 	
 
 	
@@ -207,7 +207,7 @@ example* weightImage(image tab[], int len, int nb)
     if(rep != NULL)
 	{
 
-		while(((filel = readdir(rep)) != NULL)&(i<299))
+		while(((filel = readdir(rep)) != NULL)&(i<298))
 		{
 			char file[20]="visage/";
 			char *data = filel->d_name;
@@ -224,7 +224,7 @@ example* weightImage(image tab[], int len, int nb)
 				example e;
 				e.feat = haarr2(win);
 			   	e.label = 1;
-			    	e.weight = 1/598.0;
+			    	e.weight = 1/596.0;
 				array[i] = e;
 				SDL_FreeSurface(win);
 				printf("%s\n", tab[i].name);
@@ -271,7 +271,7 @@ example* weightImage(image tab[], int len, int nb)
 		}
 	//printf("%s\n", tab[298].name);
 	}
-
+	printf("%d\n",i);
   
 	closedir(rep1);	
 		
@@ -773,19 +773,20 @@ float* decision(example* arr, int j, int n)
         nerror = errorm;
         ntoggle = -1;
       }
-      if((nerror < error) || ((nerror == error) & (nmargin > margin)))
+      if((nerror < error) || (nerror == error) & (nmargin > margin))
       {
         error = nerror;
         toggle = ntoggle;
         margin = nmargin;
 	treshold = ntreshold;
       }
+
       if(k == n)
       {
         break;
       }
-      else
       k++;
+      
       while(1)
       {
         if(arr[k].label==-1)
@@ -852,12 +853,15 @@ float *Beststump (example* arr,int d,int n)
 	ar[2]=2;
 	ar[3]=0;
 	for (int i=0; i<d; i++)
-	{
+	{	
+		bubblesort(arr,797,i);
 		float *ar2 = decision(arr,i,n);
 		if((ar2[2]<ar[2])|((ar2[3]>ar[3])&(ar2[2]==ar[2])))
 		{
-			
+				ar[0]=ar2[0];
+				ar[1]=ar2[1];
 				ar[2]=ar2[2];
+				ar[3]=ar2[3];
 				ar[4]=i;
 			
 		}
@@ -877,7 +881,7 @@ void adaboost(example* arr, int T,int n)
 	for(int i=0;i<T;i++)
 	{
 	   float error=0;
-	   float *tab= Beststump(arr,162335,n);
+	   float *tab= Beststump(arr,20,n);
 	    for(int j=0;j<n;j++)
 		{
 			if(evaluate(tab,search(arr[j].feat,tab[4]))!=arr[j].label)
@@ -899,7 +903,7 @@ void adaboost(example* arr, int T,int n)
   	    }
 	    else
 	        {
-		    float coeff=(1/2)*(log((1-error)/error));
+		    float coeff=(1.0/2.0)*(log((1.0-error)/error));
 		    for(int i=n-2;i>0;i--)
 		    {
 		            if(evaluate(tab,search(arr[i].feat,tab[4]))!=arr[i].label)
@@ -915,6 +919,7 @@ void adaboost(example* arr, int T,int n)
     			   fputc('|',file);
     			   fprintf(file, "%f", tab[i]);
    			   }
+			   fputc('|',file);
 			   fprintf(file,"%f",coeff);
    			   fprintf(file, "\n");}
 		  
