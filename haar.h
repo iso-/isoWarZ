@@ -87,8 +87,9 @@ struct example
 {
     int label;
     queue feat;
-    int weight;
+    float weight;
 };
+
 static void fill_array(image tab[], int len);
 example* weightImage(image tab[], int len, int nb); 
 //example* weightImage(size_t nb);
@@ -104,10 +105,12 @@ struct data
   int stump;
   feature feat;
 }*/
-
+int evaluate(float *tab,feature f);
 static inline void swap(example* a, example* b);
 example* min_pos(example *arr, size_t len,int j);
 void sort (example *arr, int j,size_t taille);
 void bubblesort(example *tab, size_t len,int j);
-int* decision(example* arr, int j, int n);
+float* decision(example* arr, int j, int n);
+float *Beststump (example* arr,int d,int n);
+void adaboost(example* arr, int T,int n);
 #endif

@@ -32,11 +32,24 @@ int main()
 	printf("%s\n",file);*/
 	//char* file1 = "visage";
 	//char* file2 = "/home/iso/isoWarZ/isoWarZ/nonvisage";
-	//example* arr;
-	image *tab = malloc(299*sizeof(image));
 	
-	weightImage(tab, 299, 299);
-	printf("%s\n",tab[5].name);
+	example* arr;
+	image *tab = malloc(798*sizeof(image));
+	
+	arr=weightImage(tab, 798, 798);
+	
+	
+	
+	bubblesort(arr,299,100);
+	
+
+	float *t=decision(arr,100,299);
+	printf("%f",t[2]);
+	//adaboost(arr,20,298);
+	
+
+	
+	//printf("%f",t[2]);
 	
 	//weightImage(tab, 299, 400);
 	//arr = weightImage(800);
@@ -190,11 +203,11 @@ example* weightImage(image tab[], int len, int nb)
   example *array = malloc(sizeof(example) * nb);
   struct dirent* filel = NULL;
 	int i =0;
-
+        
     if(rep != NULL)
 	{
 
-		while(((filel = readdir(rep)) != NULL)&(i<len))
+		while(((filel = readdir(rep)) != NULL)&(i<299))
 		{
 			char file[20]="visage/";
 			char *data = filel->d_name;
@@ -211,7 +224,7 @@ example* weightImage(image tab[], int len, int nb)
 				example e;
 				e.feat = haarr2(win);
 			   	e.label = 1;
-			    	e.weight = 1/598;
+			    	e.weight = 1/598.0;
 				array[i] = e;
 				SDL_FreeSurface(win);
 				printf("%s\n", tab[i].name);
@@ -222,7 +235,46 @@ example* weightImage(image tab[], int len, int nb)
 	}
 
   
-	closedir(rep);	
+	closedir(rep);
+  DIR* rep1 = NULL;
+  rep1 = opendir("nonvisage");
+  
+   struct dirent* filel1 = NULL;
+	 
+
+    if(rep1 != NULL)
+	{
+
+		while(((filel1 = readdir(rep1)) != NULL)&(i<len))
+		{
+			char file[26]="nonvisage/";
+			char *data = filel1->d_name;
+			if(data[0] != '.')
+			{
+				strcat(file,data);
+				image picture;
+				picture.name = file;
+				tab[i]=picture;
+				
+				SDL_Surface *win = NULL;
+				//printf("%s\n", tab[i].name);
+				win = IMG_Load(tab[i].name);
+				example e;
+				e.feat = haarr2(win);
+			   	e.label = -1;
+			    	e.weight = 1/998.0;
+				array[i] = e;
+				SDL_FreeSurface(win);
+				printf("%s\n", tab[i].name);
+				i++;
+			}
+		}
+	//printf("%s\n", tab[298].name);
+	}
+
+  
+	closedir(rep1);	
+		
 	
 		//printf("%s\n", tab[0].name);
 		//for(size_t i=0; i<len; i++)
@@ -666,17 +718,18 @@ void bubblesort(example *tab, size_t len,int j)
       } /* while */
 }
 
-int* decision(example* arr, int j, int n)
+float* decision(example* arr, int j, int n)
 {
-    int *ar = malloc(sizeof(int) * 4);
-    int treshold = (search(arr[0].feat,j).res)-1;
-    int margin = 0;
-    int error = 2;
-    int toggle = 1;
-    int w1=0;
-    int w2=0;
-    int w3=0;
-    int w4=0;
+    //bubblesort(arr,n,j);
+    float *ar = malloc(sizeof(float) * 5);
+    float treshold = (search(arr[0].feat,j).res)-1.0;
+    float margin = 0.0;
+    float error = 2.0;
+    float toggle = 1.0;
+    float w1=0;
+    float w2=0;
+    float w3=0;
+    float w4=0;
     for(int i=0; i<n; i++)
     {
       if(arr[i].label == 1)
@@ -697,33 +750,14 @@ int* decision(example* arr, int j, int n)
         }
       }
     }
-    for(int i=0; i<n; i++)
-    {
-      if(arr[i].label == 1)
-      {
-        if((search(arr[i].feat,j).res) < treshold)
-        {
-          w3 = w3 + arr[i].weight;
-        }
-      }
-    }
-    for(int i=0; i<n; i++)
-    {
-      if(arr[i].label == -1)
-      {
-        if((search(arr[i].feat,j).res) < treshold)
-        {
-          w4 = w4 + arr[i].weight;
-        }
-      }
-    }
+   
     int k = 0;
-    int nmargin = margin;
-    int ntreshold = treshold;
-    int nerror;
-    int errorp;
-    int errorm;
-    int ntoggle;
+    float nmargin = margin;
+    float ntreshold = treshold;
+    float nerror;
+    float errorp;
+    float errorm;
+    float ntoggle;
 
     while(1)
     {
@@ -739,7 +773,7 @@ int* decision(example* arr, int j, int n)
         nerror = errorm;
         ntoggle = -1;
       }
-      if((nerror < error) || (nerror == error) & (nmargin > margin))
+      if((nerror < error) || ((nerror == error) & (nmargin > margin)))
       {
         error = nerror;
         toggle = ntoggle;
@@ -780,7 +814,7 @@ int* decision(example* arr, int j, int n)
       }
       else
       {
-        ntreshold = (search(arr[k].feat,j).res)+(search(arr[k+1].feat,j).res)/2;
+        ntreshold = ((search(arr[k].feat,j).res)+(search(arr[k+1].feat,j).res))/2.0;
         nmargin = (search(arr[k+1].feat,j).res) - (search(arr[k].feat,j).res);
       }
     }
@@ -788,30 +822,105 @@ int* decision(example* arr, int j, int n)
     ar[1] = toggle;
     ar[2] = error;
     ar[3] = margin;
-
+    ar[4] =j;
     return ar;
 }
-
-int *Beststump (example* arr,int d,int n)
+int evaluate(float *tab,feature f)
 {
-	int *ar = malloc(sizeof(int) * 4);
+   if((f.res>=tab[0])&(tab[1]==1))
+	{
+		return 1;
+	}
+   if((f.res<tab[0])&(tab[1]==1))
+	{
+		return -1;
+	}
+ if((f.res>=tab[0])&(tab[1]==-1))
+	{
+		return -1;
+	}
+   if((f.res<tab[0])&(tab[1]==-1))
+	{
+		return 1;
+	}
+return 0;
+   
+}
+float *Beststump (example* arr,int d,int n)
+{
+	float *ar = malloc(sizeof(int)*5);
 	ar[2]=2;
+	ar[3]=0;
 	for (int i=0; i<d; i++)
 	{
-		int *ar2 = decision(arr,i,n);
-		if((ar2[2]>ar[2])|(ar2[3]>2))
+		float *ar2 = decision(arr,i,n);
+		if((ar2[2]<ar[2])|((ar2[3]>ar[3])&(ar2[2]==ar[2])))
 		{
-			if(ar2[2]==ar[2])
-			{
+			
 				ar[2]=ar2[2];
-			}
+				ar[4]=i;
+			
 		}
 
 	}
   return ar;
 }
 
-/*void adaboost(example* arr, int T)
-{
+void adaboost(example* arr, int T,int n)
+{ 
+	FILE* file = NULL;
+  	file = fopen("strongClassifieur.txt", "r+");
+  
+ 
+    
+ 
+	for(int i=0;i<T;i++)
+	{
+	   float error=0;
+	   float *tab= Beststump(arr,162335,n);
+	    for(int j=0;j<n;j++)
+		{
+			if(evaluate(tab,search(arr[j].feat,tab[4]))!=arr[j].label)
+	            error=error+arr[j].weight;
+		
+
+		}
+		
+	    if((error==0)&(T==1))
+  	    {
+                  	if(file != NULL)
+  			{
+   			for(int i=0; i<5; i++)
+   			{
+    			  fputc('|',file);
+    			  fprintf(file, "%f", tab[i]);
+   			}
+   			fprintf(file, "\n");}
+  	    }
+	    else
+	        {
+		    float coeff=(1/2)*(log((1-error)/error));
+		    for(int i=n-2;i>0;i--)
+		    {
+		            if(evaluate(tab,search(arr[i].feat,tab[4]))!=arr[i].label)
+			    {arr[i+1].weight=((arr[i].weight)/2.0)*(1.0/error);}
+				else
+			    {arr[i+1].weight=((arr[i].weight)/2.0)*(1.0/(1.0-error));}
+			    
+			 }
+	if(file != NULL)
+  			 {
+   			   for(int i=0; i<5; i++)
+   			  {
+    			   fputc('|',file);
+    			   fprintf(file, "%f", tab[i]);
+   			   }
+			   fprintf(file,"%f",coeff);
+   			   fprintf(file, "\n");}
+		  
+		}
+    	
 	
-}*/
+	}
+	fclose(file);	
+}
