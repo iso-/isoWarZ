@@ -36,7 +36,7 @@ int main()
 	image *tab = malloc(299*sizeof(image));
 	
 	weightImage(tab, 299, 299);
-	printf("%s\n",tab[5].name);
+	//printf("%s\n",tab[5].name);
 	
 	//weightImage(tab, 299, 400);
 	//arr = weightImage(800);
