@@ -96,7 +96,7 @@ int main (int argc, char *argv[])
 	   image *tab = malloc(797*sizeof(image));
            arr=weightImage(tab, 797, 797);
 	  cascade(arr,0.1,20,0.1,0.1);*/
-		SDL_Surface *surf=IMG_Load("R1.gif");
+		SDL_Surface *surf=IMG_Load("tt.gif");
 		//int **arr2 = Integral(surf);
 		
 		//feature *tab = malloc(sizeof(feature)*162336);
@@ -196,6 +196,7 @@ int main (int argc, char *argv[])
           {
             ModifInfo(c, argv[3], argv[4]);
           }
+    if(n == 0)
 
           if(strcmp(argv[2], "-ls")==0)
           {
@@ -5295,42 +5296,16 @@ void detect(SDL_Surface *surf)
 							tab2[k2].j = j;	
 							k2++;
 						}
-					}
-				
-			
-			//printf("%d\n",k);
-			//printf("%f",0.1545*(evaluate2(262521.703125,1.000000,scaling(surf,tab[(int)121589.0],24,arr))));
-			
-			
-			//free(arr2)[0]);
+					}	
 	
-	/*for(int i=0; i<surf->w-50; i++)
-	{
-		for(int j=0; j<surf->h-50; j++)
-		{
-			fenetre=SDL_CreateRGBSurface(SDL_HWSURFACE,50,50,32,0,0,0,0);
-			R.x=i;
-			R.y=j;
-			R.w=50;
-			R.h=50;
-			SDL_BlitSurface(surf,&R,fenetre,&p);	
-			feature* f=haarr2(fenetre);
-			//if(eval2(f,0,fenetre)==1)
-			if(attentionalCascade(f,fenetre,50)==1)
-			{
-				drawEmptyRect(surf,i,j,50,50,255,255,0);
-			}
-			free(fenetre);
-			free(f);
 		}
-	}*/
 	
-	}
 	}
 	k=k*2;
 	//printf("%d",nb);
 	//free(arr);
-	}
+	
+ 	 }
 	free(tab);
 	//printf("%d",k);	
 }
