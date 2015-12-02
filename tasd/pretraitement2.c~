@@ -136,7 +136,7 @@ static void fill_array(int **arr, int l, int c)
     }
 }
 
-void Integral(SDL_Surface *image, int **arr)
+void **Integral(SDL_Surface *image, int **arr)
 {
     int x,y;
   //int **arr = createArray(image->w, image->h);
