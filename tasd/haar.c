@@ -288,11 +288,11 @@ example* weightImage(image tab[], int len, int nb)
 		
 return array;}
 
-void haarr2(SDL_Surface *image, feature *tab)
+void haarr2(SDL_Surface *image, feature *tab, int **arr)
 { 
    int nb=0;
    int nbtot=0;
-    int **arr = Integral(image);
+   // int **arr = Integral(image);
     int a,b,c,d,e,f;
     int S1, S2,S3,S4;
 
@@ -466,17 +466,17 @@ void haarr2(SDL_Surface *image, feature *tab)
 	//printf("Il y a %d caractéristiques de type 5\n", nb);
 	printf("Il y a au total %d caractéristiques\n", nbtot);
 
-	free(arr[0]);	
-	free(arr);
+	//free(arr[0]);	
+	//free(arr);
 }
 
 
-int scaling(SDL_Surface *image, feature feat,int t)
+int scaling(SDL_Surface *image, feature feat,int t, int **arr)
 { 
     int a,b,c,d,e,f;
     
     int n,w,i,j,h;
-    int **arr = Integral(image);
+    //int **arr = Integral(image);
 
     if(feat.t == 1)
     {
@@ -498,8 +498,8 @@ int scaling(SDL_Surface *image, feature feat,int t)
 	e = j+2*w-1;
 	S1=(((a<0)|(b<0))?0:arr[a][b])-(((a<0)|(c<0))?0:arr[a][c])-(((d<0)|(b<0))?0:arr[d][b])+(((d<0)|(c<0))?0:arr[d][c]);
 	S2=(((a<0)|(e<0))?0:arr[a][e])-(((a<0)|(b<0))?0:arr[a][b])-(((d<0)|(e<0))?0:arr[d][e])+(((d<0)|(b<0))?0:arr[d][b]);
-    	free(arr[0]);
-  	free(arr);
+    	//free(arr[0]);
+  //	free(arr);
        return ((S1-S2)*n)/(2*w*h);
     }
 
@@ -525,8 +525,8 @@ int scaling(SDL_Surface *image, feature feat,int t)
  	S1 = (((a<0)|(b<0))?0:arr[a][b])-(((a<0)|(c<0))?0:arr[a][c])-(((d<0)|(b<0))?0:arr[d][b])+(((d<0)|(c<0))?0:arr[d][c]);
 	S2=(((a<0)|(e<0))?0:arr[a][e])-(((a<0)|(b<0))?0:arr[a][b])-(((d<0)|(e<0))?0:arr[d][e])+(((d<0)|(b<0))?0:arr[d][b]);
 	S3 = (((a<0)|(f<0))?0:arr[a][f])-(((a<0)|(e<0))?0:arr[a][e])-(((d<0)|(f<0))?0:arr[d][f])+(((d<0)|(e<0))?0:arr[d][e]);
-free(arr[0]);
-  	free(arr);
+//free(arr[0]);
+  //	free(arr);
     return ((S1-S2+S3)*n)/(3*w*h);
     }
 
@@ -550,8 +550,8 @@ free(arr[0]);
 	e = i+2*h-1;
   	S1=(((a<0)|(b<0))?0:arr[a][b])-(((a<0)|(c<0))?0:arr[a][c])-(((d<0)|(b<0))?0:arr[d][b])+(((d<0)|(c<0))?0:arr[d][c]);
         S2=(((e<0)|(b<0))?0:arr[e][b])-(((e<0)|(c<0))?0:arr[e][c])-(((a<0)|(b<0))?0:arr[a][b])+(((a<0)|(c<0))?0:arr[a][c]);
-free(arr[0]);
-  	free(arr);
+//free(arr[0]);
+  	//free(arr);
     return ((S1-S2)*n)/(2*w*h);
     }
     
@@ -577,8 +577,8 @@ free(arr[0]);
 	S1 = (((a<0)|(b<0))?0:arr[a][b])-(((a<0)|(c<0))?0:arr[a][c])-(((d<0)|(b<0))?0:arr[d][b])+(((d<0)|(c<0))?0:arr[d][c]);
 	S2=(((e<0)|(b<0))?0:arr[e][b])-(((e<0)|(c<0))?0:arr[e][c])-(((a<0)|(b<0))?0:arr[a][b])+(((a<0)|(c<0))?0:arr[a][c]);
 	S3=(((f<0)|(b<0))?0:arr[f][b])-(((f<0)|(c<0))?0:arr[f][c])-(((e<0)|(b<0))?0:arr[e][b])+(((e<0)|(c<0))?0:arr[e][c]);
-	free(arr[0]);
-  	free(arr);
+//	free(arr[0]);
+  //	free(arr);
     return ((S1-S2+S3)*n)/(3*w*h);
     }
     
@@ -610,12 +610,12 @@ free(arr[0]);
 	S2=(((e<0)|(b<0))?0:arr[e][b])-(((e<0)|(c<0))?0:arr[e][c])-(((a<0)|(b<0))?0:arr[a][b])+(((a<0)|(c<0))?0:arr[a][c]);
 	S3=(((a<0)|(f<0))?0:arr[a][f])-(((a<0)|(b<0))?0:arr[a][b])-(((d<0)|(f<0))?0:arr[d][f])+(((d<0)|(b<0))?0:arr[d][b]);
 	S4=(((e<0)|(f<0))?0:arr[e][f])-(((e<0)|(b<0))?0:arr[e][b])-(((a<0)|(f<0))?0:arr[a][f])+(((a<0)|(b<0))?0:arr[a][b]);
-	free(arr[0]);
-  	free(arr);
+//	free(arr[0]);
+  //	free(arr);
     return ((S1-S2-S3+S4)*n)/(4*w*h);
     }
-  	free(arr[0]);
-  	free(arr);
+  //	free(arr[0]);
+  //	free(arr);
   return 0;
 }
 
@@ -4585,8 +4585,8 @@ void detect(SDL_Surface *surf)
 	SDL_Rect R,p,R2;
 	p.x=0;
 	p.y=0;
-	//int **arr=Integral(surf);
-	
+	int **arr= createArray(image->w, image->h);
+	Integral(surf,arr);
 
 	SDL_Surface *surf2=IMG_Load("tt.gif");
 	feature *tab = malloc(sizeof(feature)*162336);
@@ -4641,11 +4641,11 @@ void detect(SDL_Surface *surf)
 			if(((ftab[p].i+12)>=(ftab[q].i))&&((ftab[p].i+12)<=(ftab[q].i+24))&&((ftab[p].j+12)>=(ftab[q].j))&&((ftab[p].j+12)<=(ftab[q].j+24)))
 			{
 				 for(int r=p; r<nb; r++)
-			  {
-				ftab[r] = ftab[r+1];
-			  }
-				nb--;
-				
+			   	{
+					ftab[r] = ftab[r+1];
+			 	 }
+					nb--;
+					break;
 			}
 		}
 	}
@@ -4660,5 +4660,6 @@ void detect(SDL_Surface *surf)
 	//free(arr);
 	free(tab);
 	free(ftab);
+	free(arr);
 	//printf("%d",k);	
 }

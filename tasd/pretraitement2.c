@@ -136,10 +136,10 @@ static void fill_array(int **arr, int l, int c)
     }
 }
 
-int **Integral(SDL_Surface *image)
+void **Integral(SDL_Surface *image, int **arr)
 {
     int x,y;
-    int **arr = createArray(image->w, image->h);
+  //int **arr = createArray(image->w, image->h);
     fill_array(arr, image->w, image->h);
     arr[0][0] = getpixel(image,0,0);
     for(x=1; x<image->w; x++)
@@ -157,5 +157,5 @@ int **Integral(SDL_Surface *image)
 	} 
     }
 	
-    return arr;
+    //return arr;
 }
