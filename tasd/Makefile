@@ -1,5 +1,5 @@
 CC=clang
-CFLAGS= -Wall -Wextra -g -o2 -lm -lSDL -lSDLmain -lSDL_image `pkg-config --cflags --libs gtk+-2.0`
+CFLAGS= -Wall -Wextra -pg -g -o2 -lm -lSDL -lSDLmain -lSDL_image `pkg-config --cflags --libs gtk+-2.0`
 LDLIBS=`pkg-config --libs sdl`
 
 all:
