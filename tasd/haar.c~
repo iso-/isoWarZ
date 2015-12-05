@@ -2,6 +2,8 @@
 # include <stdlib.h>
 # include <SDL/SDL.h>
 # include <SDL/SDL_image.h>
+//# include <SDL/SDL_gfx.h>
+# include <SDL/SDL_rotozoom.h>
 #include "funcInter.h"
 #include "data.h"
 # include "haar.h"
@@ -96,9 +98,26 @@ int main (int argc, char *argv[])
 	   image *tab = malloc(797*sizeof(image));
            arr=weightImage(tab, 797, 797);
 	  cascade(arr,0.1,20,0.1,0.1);*/
-		SDL_Surface *surf=IMG_Load("R1.gif");
+		char* name= "R1.gif";
+		SDL_Surface *surf=IMG_Load(name);
+		/*SDL_Surface *surf2=rotozoomSurface(surf, 0, 0.75, 0);
+		SDL_SaveBMP(surf2,"R2.bmp");*/
 	//int **arr= createArray(surf->w, surf->h);
 		//Integral(surf,arr);
+
+	//SDL_Surface *rotozoomSurface(SDL_Surface * src, double angle, double zoom, int smooth);
+
+	//surf = rotozoomSurface(surf,0, 1, 1);
+	/*double t = surf->h/1.25;
+	double t2 = surf->w/1.25;
+	surf = rotozoomSurfaceXY(surf, 0, t,t2, 1);
+	SDL_SaveBMP (surf,"tata.bmp");*/
+	
+	//surf = resize(surf);
+	//SDL_Surface *surf2=IMG_Load("R1.gif");
+
+	//resizeImage(surf,surf->w/1.25,surf->h/1.25);
+	
 		
 		//feature *tab = malloc(sizeof(feature)*162336);
 		// haarr2(surf,tab);	
@@ -110,7 +129,7 @@ int main (int argc, char *argv[])
 	//printf("%d\n", scaling(surf,tab[0],24,arr));
 		//drawEmptyRect(surf,0,0,250,250,0,0,0);
 		//printf("%d",attentionalCascade(tab,surf,24,arr));		
-		detect(surf);
+		detect(surf,name);
 		/*int **arr= createArray(surf->w, surf->h);
 		Integral(surf,arr);
 		
@@ -211,11 +230,51 @@ int main (int argc, char *argv[])
       else
     {
       printf("erreur arg");
-    }
+    }0xff
   }*/
   //}
   return 0;
 }
+
+SDL_Surface* resize(SDL_Surface* image)
+{
+    int i = 0, j = 0, x = 0, y = 0;
+    Uint32 pixel;
+	
+	
+    // je crée ma surface aux bonnes dimensions
+    SDL_Surface* img = SDL_CreateRGBSurface(SDL_SWSURFACE, image->w/1.8, image->h/1.8, 32, 0,0, 0, 0);
+//CreateSurface (image->w/1.25,image->h/1.25);
+//
+
+    // je bloque les deux images
+    SDL_LockSurface(image);
+    SDL_LockSurface(img);
+
+    // je prend une ligne et une colonne sur deux
+    for (j = 0; j < image->h; j += 2)
+    {
+        x = 0;
+        for (i = 0; i < image->w; i += 2)
+        {
+
+            pixel = getpixel(image, i, j);
+            defPixel(img, x, y, pixel);
+            x++;
+        }
+        y++;
+    }
+
+    // je débloque les images
+    SDL_UnlockSurface(img);
+    SDL_UnlockSurface(image);
+
+    // je libère la surface initiale
+    //SDL_FreeSurface(image);
+
+    return img;
+}
+
 
 example* weightImage(image tab[], int len, int nb) 
 {	
@@ -298,7 +357,7 @@ example* weightImage(image tab[], int len, int nb)
 		
 return array;}
 
-feature haarr2(SDL_Surface *image,feature *tab)
+void haarr2(SDL_Surface *image,feature *tab)
 { 
    int nb=0;
    int nbtot=0;
@@ -1154,8 +1213,8 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	
 	s = s+0.1545*(evaluate2(262521.703125,1.000000,scaling(surf,feat[(int)121589.0],i,arr))+0.41);
 	s = s+0.1706144657*(evaluate2(-9311.8671875000,-1.000000,scaling(surf,feat[(int)90873.0],i,arr))+0.41);
-	//s = s+0.2320851203*(evaluate2(50935.9335937500,1.000000,scaling(surf,feat[(int)148988.0],i,arr))+0.41);
-	/*s = s+0.2402345193*(evaluate2(-171806.4062500000,-1.000000,scaling(surf,feat[(int)124635.0],i,arr))+0.41);
+	/*s = s+0.2320851203*(evaluate2(50935.9335937500,1.000000,scaling(surf,feat[(int)148988.0],i,arr))+0.41);
+	s = s+0.2402345193*(evaluate2(-171806.4062500000,-1.000000,scaling(surf,feat[(int)124635.0],i,arr))+0.41);
 	s = s+0.2573262077*(evaluate2(-223414.2265625000,1.000000,scaling(surf,feat[(int)83007.0],i,arr))+0.41);
 	s = s+0.2470397812*(evaluate2(125043.9375000000,1.000000,scaling(surf,feat[(int)9781.0],i,arr))+0.41);
 	s = s+0.2830593091*(evaluate2(-2979.5800781250,-1.000000,scaling(surf,feat[(int)87795.0],i,arr))+0.41);
@@ -1210,7 +1269,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.2488317873*(evaluate2(-13465.3632812500,-1.000000,scaling(surf,feat[(int)20328.0],i,arr))+0.139999);
 	s = s+0.2914266584*(evaluate2(23895.0273437500,1.000000,scaling(surf,feat[(int)161974.0],i,arr))+0.139999);
 	s = s+0.3203899683*(evaluate2(57346.7871093750,1.000000,scaling(surf,feat[(int)144539.0],i,arr))+0.139999);
-	/*s = s+0.3310000084*(evaluate2(143205.3984375000,-1.000000,scaling(surf,feat[(int)140235.0],i,arr))+0.139999);
+	s = s+0.3310000084*(evaluate2(143205.3984375000,-1.000000,scaling(surf,feat[(int)140235.0],i,arr))+0.139999);
 	s = s+0.2930824553*(evaluate2(24379.5390625000,1.000000,scaling(surf,feat[(int)160259.0],i,arr))+0.139999);
 	s = s+0.3198077894*(evaluate2(-642.8740234375,-1.000000,scaling(surf,feat[(int)92151.0],i,arr))+0.139999);
 	s = s+0.1715164319*(evaluate2(288491.4843750000,1.000000,scaling(surf,feat[(int)121582.0],i,arr))+0.139999);
@@ -1240,7 +1299,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.2766382749*(evaluate2(-163109.9140625000,-1.000000,scaling(surf,feat[(int)90854.0],i,arr))+0.139999);
 	s = s+0.2848532721*(evaluate2(-16371.7431640625,-1.000000,scaling(surf,feat[(int)22818.0],i,arr))+0.139999);
 	s = s+0.3103580271*(evaluate2(34924.1855468750,1.000000,scaling(surf,feat[(int)147608.0],i,arr))+0.139999);
-	s = s+0.3385338999*(evaluate2(-48551.2539062500,-1.000000,scaling(surf,feat[(int)146642.0],i,arr))+0.139999);*/
+	s = s+0.3385338999*(evaluate2(-48551.2539062500,-1.000000,scaling(surf,feat[(int)146642.0],i,arr))+0.139999);
 	if(s < 0)
 	{
 		return -1;
@@ -1262,7 +1321,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.3198077894*(evaluate2(-642.8740234375,-1.000000,scaling(surf,feat[(int)92151.0],i,arr))+0.0699993);
 	s = s+0.1715164319*(evaluate2(288491.4843750000,1.000000,scaling(surf,feat[(int)121582.0],i,arr))+0.0699993);
 	s = s+0.2306325082*(evaluate2(-65480.3085937500,-1.000000,scaling(surf,feat[(int)90089.0],i,arr))+0.0699993);
-	/*s = s+0.2478790999*(evaluate2(-47963.5527343750,-1.000000,scaling(surf,feat[(int)14434.0],i,arr))+0.0699993);
+	s = s+0.2478790999*(evaluate2(-47963.5527343750,-1.000000,scaling(surf,feat[(int)14434.0],i,arr))+0.0699993);
 	s = s+0.2588687601*(evaluate2(-17401.6796875000,-1.000000,scaling(surf,feat[(int)160515.0],i,arr))+0.0699993);
 	s = s+0.2589874892*(evaluate2(-189683.3437500000,1.000000,scaling(surf,feat[(int)82527.0],i,arr))+0.0699993);
 	s = s+0.2842598146*(evaluate2(-42751.1445312500,-1.000000,scaling(surf,feat[(int)161800.0],i,arr))+0.0699993);
@@ -1297,7 +1356,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.3163757355*(evaluate2(-959.8259277344,1.000000,scaling(surf,feat[(int)105455.0],i,arr))+0.0699993);
 	s = s+0.3211187072*(evaluate2(-165529.4296875000,-1.000000,scaling(surf,feat[(int)21506.0],i,arr))+0.0699993);
 	s = s+0.2971280623*(evaluate2(174910.8437500000,1.000000,scaling(surf,feat[(int)30194.0],i,arr))+0.0699993);
-	s = s+0.3151830660*(evaluate2(-156101.234375000,-1.000000,scaling(surf,feat[(int)125350.000000],i,arr))+0.0699993);*/
+	s = s+0.3151830660*(evaluate2(-156101.234375000,-1.000000,scaling(surf,feat[(int)125350.000000],i,arr))+0.0699993);
 	if(s < 0)
 	{
 		return -1;
@@ -1324,7 +1383,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.2589874892*(evaluate2(-189683.3437500000,1.000000,scaling(surf,feat[(int)82527.0],i,arr))+0.109999);
 	s = s+0.2842598146*(evaluate2(-42751.1445312500,-1.000000,scaling(surf,feat[(int)161800.0],i,arr))+0.109999);
 	s = s+0.2812122660*(evaluate2(-57602.6406250000,-1.000000,scaling(surf,feat[(int)95793.0],i,arr))+0.109999);
-	/*s = s+0.3066515741*(evaluate2(-17143.0234375000,-1.000000,scaling(surf,feat[(int)142169.0],i,arr))+0.109999);
+	s = s+0.3066515741*(evaluate2(-17143.0234375000,-1.000000,scaling(surf,feat[(int)142169.0],i,arr))+0.109999);
 	s = s+0.3149770216*(evaluate2(15004.6074218750,1.000000,scaling(surf,feat[(int)29972.0],i,arr))+0.109999);
 	s = s+0.3201983094*(evaluate2(60.6528320312,1.000000,scaling(surf,feat[(int)105645.0],i,arr))+0.109999);
 	s = s+0.3308580989*(evaluate2(-201619.4843750000,1.000000,scaling(surf,feat[(int)139719.0],i,arr))+0.109999);
@@ -1364,7 +1423,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.3278205237*(evaluate2(-4144.4094238281,-1.000000,scaling(surf,feat[(int)93576.000000],i,arr))+0.109999);
 	s = s+0.3509143200*(evaluate2(157292.0156250000,1.000000,scaling(surf,feat[(int)12809.000000],i,arr))+0.109999);
 	s = s+0.3432705068*(evaluate2(-21815.4921875000,-1.000000,scaling(surf,feat[(int)95473.000000],i,arr))+0.109999);
-	s = s+0.3493193744*(evaluate2(40263.1113281250,1.000000,scaling(surf,feat[(int)159614.000000],i,arr))+0.109999);*/
+	s = s+0.3493193744*(evaluate2(40263.1113281250,1.000000,scaling(surf,feat[(int)159614.000000],i,arr))+0.109999);
 	if(s < 0)
 	{
 		return -1;
@@ -1396,7 +1455,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.3201983094*(evaluate2(60.6528320312,1.000000,scaling(surf,feat[(int)105645.0],i,arr))+0.099993);
 	s = s+0.3308580989*(evaluate2(-201619.4843750000,1.000000,scaling(surf,feat[(int)139719.0],i,arr))+0.099993);
 	s = s+0.2971280623*(evaluate2(-1729.4726562500,1.000000,scaling(surf,feat[(int)102956.0],i,arr))+0.099993);
-	/*s = s+0.3283367275*(evaluate2(10786.6362304688,1.000000,scaling(surf,feat[(int)160259.0],i,arr))+0.099993);
+	s = s+0.3283367275*(evaluate2(10786.6362304688,1.000000,scaling(surf,feat[(int)160259.0],i,arr))+0.099993);
 	s = s+0.3398630213*(evaluate2(-7466.4345703125,-1.000000,scaling(surf,feat[(int)20307.0],i,arr))+0.099993);
 	s = s+0.3402661294*(evaluate2(66.6142578125,-1.000000,scaling(surf,feat[(int)56601.0],i,arr))+0.099993);
 	s = s+0.3212567263*(evaluate2(-648397.4375000000,-1.000000,scaling(surf,feat[(int)43390.0],i,arr))+0.099993);
@@ -1441,7 +1500,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.3295947999*(evaluate2(1376.9604492188,-1.000000,scaling(surf,feat[(int)43199.000000],i,arr))+0.099993);
 	s = s+0.3430840530*(evaluate2(72596.7109375000,1.000000,scaling(surf,feat[(int)147319.000000],i,arr))+0.099993);
 	s = s+0.3509979389*(evaluate2(-66.1621093750,-1.000000,scaling(surf,feat[(int)161710.0],i,arr))+0.099993);
-	s = s+0.3509350683*(evaluate2(63.6138305664,1.000000,scaling(surf,feat[(int)156113.0],i,arr))+0.099993);*/
+	s = s+0.3509350683*(evaluate2(63.6138305664,1.000000,scaling(surf,feat[(int)156113.0],i,arr))+0.099993);
 	if(s < 0)
 	{
 		return -1;
@@ -1477,7 +1536,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.3398630213*(evaluate2(-7466.4345703125,-1.000000,scaling(surf,feat[(int)20307.0],i,arr))+0.055);
 	s = s+0.3402661294*(evaluate2(66.6142578125,-1.000000,scaling(surf,feat[(int)56601.0],i,arr))+0.055);
 	s = s+0.3212567263*(evaluate2(-648397.4375000000,-1.000000,scaling(surf,feat[(int)43390.0],i,arr))+0.055);
-	/*s = s+0.3378948466*(evaluate2(-242616.3984375000,-1.000000,scaling(surf,feat[(int)123334.0],i,arr))+0.055);
+	s = s+0.3378948466*(evaluate2(-242616.3984375000,-1.000000,scaling(surf,feat[(int)123334.0],i,arr))+0.055);
 	s = s+0.3069062830*(evaluate2(-244983.9218750000,1.000000,scaling(surf,feat[(int)79908.0],i,arr))+0.055);
 	s = s+0.3177856960*(evaluate2(260819.2812500000,1.000000,scaling(surf,feat[(int)61598.0],i,arr))+0.055);
 	s = s+0.3310358465*(evaluate2(-22741.6318359375,-1.000000,scaling(surf,feat[(int)126968.0],i,arr))+0.055);
@@ -1525,7 +1584,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.3459865467*(evaluate2(82784.4843750000,1.000000,scaling(surf,feat[(int)160241.0],i,arr))+0.055);
 	s = s+0.3303353043*(evaluate2(20339.1796875000,-1.000000,scaling(surf,feat[(int)151190.0],i,arr))+0.055);
 	s = s+0.3561070248*(evaluate2(-3641.2100830078,1.000000,scaling(surf,feat[(int)103146.000000],i,arr))+0.055);
-	s = s+0.2260000000*(evaluate2(326748.703125000,1.000000,scaling(surf,feat[(int)121449.000000],i,arr))+0.055);*/
+	s = s+0.2260000000*(evaluate2(326748.703125000,1.000000,scaling(surf,feat[(int)121449.000000],i,arr))+0.055);
 	if(s < 0)
 	{
 		return -1;
@@ -1572,7 +1631,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.2766382749*(evaluate2(-163109.9140625000,-1.000000,scaling(surf,feat[(int)90854.0],i,arr))+0.1075);
 	s = s+0.2848532721*(evaluate2(-16371.7431640625,-1.000000,scaling(surf,feat[(int)22818.0],i,arr))+0.1075);
 	s = s+0.3103580271*(evaluate2(34924.1855468750,1.000000,scaling(surf,feat[(int)147608.0],i,arr))+0.1075);
-	s = s+0.3385338999*(evaluate2(-48551.2539062500,-1.000000,scaling(surf,feat[(int)146642.0],i,arr))+0.1075);
+	/*s = s+0.3385338999*(evaluate2(-48551.2539062500,-1.000000,scaling(surf,feat[(int)146642.0],i,arr))+0.1075);*/
 	if(s < 0)
 	{
 		return -1;
@@ -1629,7 +1688,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.3163757355*(evaluate2(-959.8259277344,1.000000,scaling(surf,feat[(int)105455.0],i,arr))+0.0499993);
 	s = s+0.3211187072*(evaluate2(-165529.4296875000,-1.000000,scaling(surf,feat[(int)21506.0],i,arr))+0.0499993);
 	s = s+0.2971280623*(evaluate2(174910.8437500000,1.000000,scaling(surf,feat[(int)30194.0],i,arr))+0.0499993);
-	/*s = s+0.3151830660*(evaluate2(-156101.234375000,-1.000000,scaling(surf,feat[(int)125350.000000],i,arr))+0.0499993);
+	s = s+0.3151830660*(evaluate2(-156101.234375000,-1.000000,scaling(surf,feat[(int)125350.000000],i,arr))+0.0499993);
 	s = s+0.3384683476*(evaluate2(-934752.0312500000,-1.000000,scaling(surf,feat[(int)43391.000000],i,arr))+0.0499993);
 	s = s+0.3412882462*(evaluate2(156361.828125000,-1.000000,scaling(surf,feat[(int)140357.000000],i,arr))+0.0499993);
 	s = s+0.3224412466*(evaluate2(-191149.101562500,-1.000000,scaling(surf,feat[(int)54390.000000],i,arr))+0.0499993);
@@ -1680,7 +1739,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.3344496067*(evaluate2(-1692.089843750,1.000000,scaling(surf,feat[(int)39252.000000],i,arr))+0.0499993);
 	s = s+0.3481869905*(evaluate2(43323.1953125000,1.000000,scaling(surf,feat[(int)161996.000000],i,arr))+0.0499993);
 	s = s+0.3296427806*(evaluate2(-2056.1044921875,1.000000,scaling(surf,feat[(int)110475.000000],i,arr))+0.0499993);
-	s = s+0.3555937196*(evaluate2(64875.9804687500,1.000000,scaling(surf,feat[(int)85001.000000],i,arr))+0.0499993);*/
+	s = s+0.3555937196*(evaluate2(64875.9804687500,1.000000,scaling(surf,feat[(int)85001.000000],i,arr))+0.0499993);
 	if(s < 0)
 	{
 		return -1;
@@ -1746,7 +1805,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s = s+0.3436134819*(evaluate2(-95632.5898437500,1.000000,scaling(surf,feat[(int)121622.000000],i,arr))-0.0200007);
 	s = s+0.3278205237*(evaluate2(-4144.4094238281,-1.000000,scaling(surf,feat[(int)93576.000000],i,arr))-0.0200007);
 	s = s+0.3509143200*(evaluate2(157292.0156250000,1.000000,scaling(surf,feat[(int)12809.000000],i,arr))-0.0200007);
-	/*s = s+0.3432705068*(evaluate2(-21815.4921875000,-1.000000,scaling(surf,feat[(int)95473.000000],i,arr))-0.0200007);
+	s = s+0.3432705068*(evaluate2(-21815.4921875000,-1.000000,scaling(surf,feat[(int)95473.000000],i,arr))-0.0200007);
 	s = s+0.3493193744*(evaluate2(40263.1113281250,1.000000,scaling(surf,feat[(int)159614.000000],i,arr))-0.0200007);
 	s = s+0.3295947999*(evaluate2(1376.9604492188,-1.000000,scaling(surf,feat[(int)43199.000000],i,arr))-0.0200007);
 	s = s+0.3430840530*(evaluate2(72596.7109375000,1.000000,scaling(surf,feat[(int)147319.000000],i,arr))-0.0200007);
@@ -1798,13 +1857,13 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	s=s+0.3500241501*(evaluate2(-411991.0625000000,-1.0,scaling(surf,feat[(int)47698.0],i,arr))-0.0200007);
 	s=s+0.3370979052*(evaluate2(-12858.0649414062,1.0,scaling(surf,feat[(int)99966.0],i,arr))-0.0200007);
 	s=s+0.3367453767*(evaluate2(205665.1015625000,1.0,scaling(surf,feat[(int)38182.0],i,arr))-0.0200007);
-	s=s+0.3272054961*(evaluate2(26044.8359375000,-1.0,scaling(surf,feat[(int)88687.0],i,arr))-0.0200007);*/
+	s=s+0.3272054961*(evaluate2(26044.8359375000,-1.0,scaling(surf,feat[(int)88687.0],i,arr))-0.0200007);
 	if(s < 0)
 	{
 		return -1;
 	}
 	
-	/*s = 0;
+	s = 0;
 	s = s+0.1545*(evaluate2(262521.703125,1.000000,scaling(surf,feat[(int)121589.0],i,arr))+0.0399993);
 	s = s+0.1706144657*(evaluate2(-9311.8671875000,-1.000000,scaling(surf,feat[(int)90873.0],i,arr))+0.0399993);
 	s = s+0.2320851203*(evaluate2(50935.9335937500,1.000000,scaling(surf,feat[(int)148988.0],i,arr))+0.0399993);
@@ -4398,7 +4457,7 @@ int attentionalCascade(feature *feat,SDL_Surface *surf,int i,int **arr)
 	if(s<0)
 	{
 		return -1;
-	}*/
+	}
 	
 
 
@@ -4614,24 +4673,29 @@ void drawEmptyRect(SDL_Surface * surf,SDL_Surface *surf2,int posX, int posY, int
 	//SDL_FreeSurface(surf2);
 	
 }
-void detect(SDL_Surface *surf)
+void detect(SDL_Surface *surf, char* name)
 {
 	int nb=0;
 	SDL_Rect R,p,R2;
 	p.x=0;
 	p.y=0;
-	int **arr= createArray(24, 24);
+	int **arr= createArray(surf->w,surf->h);
 	
-
-	SDL_Surface *surf2=IMG_Load("R1.gif");
+	
+	SDL_Surface *surf2 = IMG_Load(name);
+	SDL_Surface *surf3 = rotozoomSurface(surf, 0, 1, 0);
+	
 	feature *tab = malloc(sizeof(feature)*162336);
 	haarr2(surf,tab);
 	int k=24;
 	int k2=0;
 	face* ftab=malloc(sizeof(face)*surf->w*surf->w);
-	while(k<surf->w && k<surf->h)
+	while(surf3->w>24 && surf3->h>24)
 	{
 	face f;
+	//SDL_Surface *rotozoomSurface(SDL_Surface * src, double angle, double zoom, int smooth);
+
+	//surf = rotozoomSurface(surf,  rotation_degrees, 1, 1);
 	
 	for(int i=0; i<surf->w-k; i+=1)
 	{
@@ -4639,19 +4703,19 @@ void detect(SDL_Surface *surf)
 		{	
 			
 			SDL_Surface *fenetre=NULL;
-			fenetre=SDL_CreateRGBSurface(SDL_HWSURFACE,k,k,32,0,0,0,0);
+			fenetre=SDL_CreateRGBSurface(SDL_HWSURFACE,24,24,32,0,0,0,0);
 			R.x=i;
 			R.y=j;
-			R.w=k;
-			R.h=k;
-			SDL_BlitSurface(surf,&R,fenetre,&p);
+			R.w=24;
+			R.h=24;
+			SDL_BlitSurface(surf3,&R,fenetre,&p);
 			Integral(fenetre,arr);
 			
 			//ajouter boucle
 			
 					
 					//printf("%d",tab[1].res);
-					if(attentionalCascade(tab,fenetre,k,arr)==1)
+					if(attentionalCascade(tab,fenetre,24,arr)==1)
 					{	
 						
 						f.i=i;
@@ -4673,27 +4737,55 @@ void detect(SDL_Surface *surf)
 			//free(arr2);
 		}
 	}
+		k=k*1.25;
+		surf3 = rotozoomSurface(surf3, 0, 0.75, 0);
+		//SDL_SaveBMP (surf,"r.bmp");
+	}
+
 	for (int p=0;p<nb;p++)
 	{
 		for (int q=p+1;q<nb;q++)
 		{
-			if(((ftab[p].i+12)>=(ftab[q].i))&&((ftab[p].i+12)<=(ftab[q].i+24))&&((ftab[p].j+12)>=(ftab[q].j))&&((ftab[p].j+12)<=(ftab[q].j+24)))
+			if(((ftab[p].i+ftab[p].k/2)>=(ftab[q].i))&&((ftab[p].i+ftab[p].k/2)<=(ftab[q].i+ftab[q].k))&&((ftab[p].j+ftab[p].k/2)>=(ftab[q].j))&&((ftab[p].j+ftab[p].k/2)<=(ftab[q].j+ftab[q].k)))
 			{
-				 for(int r=p; r<nb; r++)
-			   	{
+				for(int r=q; r<nb; r++)
+			   		{
 					ftab[r] = ftab[r+1];
-			 	 }
+			 	 	}
 					nb--;
-					break;
+					//break;
+					q++;
+					//break;
+				/*if((tab[p].i-tab[q].i<5)&&(tab[p].j-tab[q].j<5))
+				{
+				if(ftab[p].k>ftab[q].k)
+				{	
+					 for(int r=q; r<nb; r++)
+			   		{
+					ftab[r] = ftab[r+1];
+			 	 	}
+					nb--;
+				}
+				else
+				{
+					for(int r=p; r<nb; r++)
+			   		{
+					ftab[r] = ftab[r+1];
+			 	 	}
+					nb--;
+					p--;
+				}}*/
+					
 			}
 		}
 	}
+	
+	
 	for(int s=0;s<nb;s++)
 	{	
 		drawEmptyRect(surf,surf2,ftab[s].i,ftab[s].j,ftab[s].k,ftab[s].k,255,255,0);
 	}
-	k=k*2;
-}
+	
 	printf("%d",nb);
 	SDL_FreeSurface(surf2);
 	//free(arr);

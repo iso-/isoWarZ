@@ -71,7 +71,7 @@ feature search(queue q,int n)
     return tmp->f;
 }
 
-feature haarr2(SDL_Surface *image,feature *tab);
+void haarr2(SDL_Surface *image,feature *tab);
 int scaling(SDL_Surface *image, feature feat,int t, int **arr);
 
 typedef struct example example;
@@ -114,9 +114,10 @@ void copy();
 int eval(int n,example* arr,int sl);
 void cascade(example* arr, float fpr, int l, float gl,float bl);
 void drawEmptyRect(SDL_Surface * surf, SDL_Surface *surf2, int posx, int posy, int width, int length, int r, int g, int b);
-void detect(SDL_Surface *surf);
+void detect(SDL_Surface *surf, char* name);
 int evaluate(float *tab,feature f);
 float evaluate2(float tab0, float tab1,int f);
 int eval2(feature *feat, SDL_Surface *surf);
 int attentionalcascade(feature *feat,SDL_Surface *surf,int i,int **arr);
+SDL_Surface* resize(SDL_Surface* image);
 #endif
